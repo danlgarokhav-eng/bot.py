@@ -1,24 +1,24 @@
-import telebot
-from telebot.types import InlineKeyboardMarkup, InlineKeyboardButton, WebAppInfo
+from aiogram import Bot, Dispatcher, types
+from aiogram.types import WebAppInfo
+import asyncio
 
 BOT_TOKEN = "8824419035:AAH72eIsZNUUbw8qVgoK_iB6PQmuHZVrro8"
-MINIAPP_URL = "https://miniapp-server-production-9b9e.up.railway.app/miniapp"
+WEBAPP_URL = "https://miniapp-server-production-9b9e.up.railway.app/miniapp"
 
-bot = telebot.TeleBot(BOT_TOKEN)
+bot = Bot(BOT_TOKEN)
+dp = Dispatcher()
 
-@bot.message_handler(commands=['start'])
-def start(message):
-    markup = InlineKeyboardMarkup()
-    btn = InlineKeyboardButton(
-        text="🛍 Открыть магазин",
-        web_app=WebAppInfo(url=MINIAPP_URL)
+@dp.message()
+async def start(msg: types.Message):
+    kb = types.InlineKeyboardMarkup().add(
+        types.InlineKeyboardButton(
+            "Открыть магазин",
+            web_app=WebAppInfo(url=WEBAPP_URL)
+        )
     )
-    markup.add(btn)
+    await msg.answer("Добро пожаловать!", reply_markup=kb)
 
-    bot.send_message(
-        message.chat.id,
-        "Добро пожаловать! Нажми кнопку ниже, чтобы открыть магазин 👇",
-        reply_markup=markup
-    )
+async def main():
+    await dp.start_polling(bot)
 
-bot.polling(none_stop=True)
+asyncio.run(main())
