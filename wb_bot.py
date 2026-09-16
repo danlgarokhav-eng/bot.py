@@ -6,11 +6,14 @@ HEADERS = {
     "Accept": "application/json",
 }
 
-def search_wb(query, limit=100):
-    url = "https://catalog.wb.ru/catalog/search/catalog"
+def get_wb_items(category="men_shoes", page=1, limit=100):
+    url = f"https://catalog.wb.ru/catalog/{category}/catalog"
     params = {
-        "search": query,
-        "page": 1,
+        "appType": 1,
+        "curr": "rub",
+        "dest": -1257786,
+        "sort": "popular",
+        "page": page,
         "limit": limit
     }
 
@@ -42,12 +45,11 @@ def search_wb(query, limit=100):
 
 
 def main():
-    query = "кроссовки"
-
-    items = search_wb(query)
+    # Кроссовки = категория men_shoes
+    items = get_wb_items("men_shoes")
 
     feed = {
-        "query": query,
+        "query": "кроссовки",
         "count": len(items),
         "items": items
     }
