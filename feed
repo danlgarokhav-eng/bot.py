@@ -1,0 +1,1806 @@
+{
+  "source": "DummyJSON",
+  "query": "",
+  "count": 100,
+  "updated_at": "2026-09-16 20:31:49",
+  "items": [
+    {
+      "id": 1,
+      "name": "Essence Mascara Lash Princess",
+      "brand": "Essence",
+      "price": 9.99,
+      "old_price": 11.16,
+      "discount": 10.48,
+      "rating": 2.56,
+      "stock": 99,
+      "category": "beauty",
+      "description": "The Essence Mascara Lash Princess is a popular mascara known for its volumizing and lengthening effects. Achieve dramatic lashes with this long-lasting and cruelty-free formula.",
+      "image": "https://cdn.dummyjson.com/product-images/beauty/essence-mascara-lash-princess/thumbnail.webp",
+      "images": [
+        "https://cdn.dummyjson.com/product-images/beauty/essence-mascara-lash-princess/1.webp"
+      ],
+      "link": "https://dummyjson.com/products/1"
+    },
+    {
+      "id": 2,
+      "name": "Eyeshadow Palette with Mirror",
+      "brand": "Glamour Beauty",
+      "price": 19.99,
+      "old_price": 24.43,
+      "discount": 18.19,
+      "rating": 2.86,
+      "stock": 34,
+      "category": "beauty",
+      "description": "The Eyeshadow Palette with Mirror offers a versatile range of eyeshadow shades for creating stunning eye looks. With a built-in mirror, it's convenient for on-the-go makeup application.",
+      "image": "https://cdn.dummyjson.com/product-images/beauty/eyeshadow-palette-with-mirror/thumbnail.webp",
+      "images": [
+        "https://cdn.dummyjson.com/product-images/beauty/eyeshadow-palette-with-mirror/1.webp"
+      ],
+      "link": "https://dummyjson.com/products/2"
+    },
+    {
+      "id": 3,
+      "name": "Powder Canister",
+      "brand": "Velvet Touch",
+      "price": 14.99,
+      "old_price": 16.63,
+      "discount": 9.84,
+      "rating": 4.64,
+      "stock": 89,
+      "category": "beauty",
+      "description": "The Powder Canister is a finely milled setting powder designed to set makeup and control shine. With a lightweight and translucent formula, it provides a smooth and matte finish.",
+      "image": "https://cdn.dummyjson.com/product-images/beauty/powder-canister/thumbnail.webp",
+      "images": [
+        "https://cdn.dummyjson.com/product-images/beauty/powder-canister/1.webp"
+      ],
+      "link": "https://dummyjson.com/products/3"
+    },
+    {
+      "id": 4,
+      "name": "Red Lipstick",
+      "brand": "Chic Cosmetics",
+      "price": 12.99,
+      "old_price": 14.79,
+      "discount": 12.16,
+      "rating": 4.36,
+      "stock": 91,
+      "category": "beauty",
+      "description": "The Red Lipstick is a classic and bold choice for adding a pop of color to your lips. With a creamy and pigmented formula, it provides a vibrant and long-lasting finish.",
+      "image": "https://cdn.dummyjson.com/product-images/beauty/red-lipstick/thumbnail.webp",
+      "images": [
+        "https://cdn.dummyjson.com/product-images/beauty/red-lipstick/1.webp"
+      ],
+      "link": "https://dummyjson.com/products/4"
+    },
+    {
+      "id": 5,
+      "name": "Red Nail Polish",
+      "brand": "Nail Couture",
+      "price": 8.99,
+      "old_price": 10.15,
+      "discount": 11.44,
+      "rating": 4.32,
+      "stock": 79,
+      "category": "beauty",
+      "description": "The Red Nail Polish offers a rich and glossy red hue for vibrant and polished nails. With a quick-drying formula, it provides a salon-quality finish at home.",
+      "image": "https://cdn.dummyjson.com/product-images/beauty/red-nail-polish/thumbnail.webp",
+      "images": [
+        "https://cdn.dummyjson.com/product-images/beauty/red-nail-polish/1.webp"
+      ],
+      "link": "https://dummyjson.com/products/5"
+    },
+    {
+      "id": 6,
+      "name": "Calvin Klein CK One",
+      "brand": "Calvin Klein",
+      "price": 49.99,
+      "old_price": 50.95,
+      "discount": 1.89,
+      "rating": 4.37,
+      "stock": 29,
+      "category": "fragrances",
+      "description": "CK One by Calvin Klein is a classic unisex fragrance, known for its fresh and clean scent. It's a versatile fragrance suitable for everyday wear.",
+      "image": "https://cdn.dummyjson.com/product-images/fragrances/calvin-klein-ck-one/thumbnail.webp",
+      "images": [
+        "https://cdn.dummyjson.com/product-images/fragrances/calvin-klein-ck-one/1.webp",
+        "https://cdn.dummyjson.com/product-images/fragrances/calvin-klein-ck-one/2.webp",
+        "https://cdn.dummyjson.com/product-images/fragrances/calvin-klein-ck-one/3.webp"
+      ],
+      "link": "https://dummyjson.com/products/6"
+    },
+    {
+      "id": 7,
+      "name": "Chanel Coco Noir Eau De",
+      "brand": "Chanel",
+      "price": 129.99,
+      "old_price": 155.7,
+      "discount": 16.51,
+      "rating": 4.26,
+      "stock": 58,
+      "category": "fragrances",
+      "description": "Coco Noir by Chanel is an elegant and mysterious fragrance, featuring notes of grapefruit, rose, and sandalwood. Perfect for evening occasions.",
+      "image": "https://cdn.dummyjson.com/product-images/fragrances/chanel-coco-noir-eau-de/thumbnail.webp",
+      "images": [
+        "https://cdn.dummyjson.com/product-images/fragrances/chanel-coco-noir-eau-de/1.webp",
+        "https://cdn.dummyjson.com/product-images/fragrances/chanel-coco-noir-eau-de/2.webp",
+        "https://cdn.dummyjson.com/product-images/fragrances/chanel-coco-noir-eau-de/3.webp"
+      ],
+      "link": "https://dummyjson.com/products/7"
+    },
+    {
+      "id": 8,
+      "name": "Dior J'adore",
+      "brand": "Dior",
+      "price": 89.99,
+      "old_price": 105.52,
+      "discount": 14.72,
+      "rating": 3.8,
+      "stock": 98,
+      "category": "fragrances",
+      "description": "J'adore by Dior is a luxurious and floral fragrance, known for its blend of ylang-ylang, rose, and jasmine. It embodies femininity and sophistication.",
+      "image": "https://cdn.dummyjson.com/product-images/fragrances/dior-j'adore/thumbnail.webp",
+      "images": [
+        "https://cdn.dummyjson.com/product-images/fragrances/dior-j'adore/1.webp",
+        "https://cdn.dummyjson.com/product-images/fragrances/dior-j'adore/2.webp",
+        "https://cdn.dummyjson.com/product-images/fragrances/dior-j'adore/3.webp"
+      ],
+      "link": "https://dummyjson.com/products/8"
+    },
+    {
+      "id": 9,
+      "name": "Dolce Shine Eau de",
+      "brand": "Dolce & Gabbana",
+      "price": 69.99,
+      "old_price": 70.43,
+      "discount": 0.62,
+      "rating": 3.96,
+      "stock": 4,
+      "category": "fragrances",
+      "description": "Dolce Shine by Dolce & Gabbana is a vibrant and fruity fragrance, featuring notes of mango, jasmine, and blonde woods. It's a joyful and youthful scent.",
+      "image": "https://cdn.dummyjson.com/product-images/fragrances/dolce-shine-eau-de/thumbnail.webp",
+      "images": [
+        "https://cdn.dummyjson.com/product-images/fragrances/dolce-shine-eau-de/1.webp",
+        "https://cdn.dummyjson.com/product-images/fragrances/dolce-shine-eau-de/2.webp",
+        "https://cdn.dummyjson.com/product-images/fragrances/dolce-shine-eau-de/3.webp"
+      ],
+      "link": "https://dummyjson.com/products/9"
+    },
+    {
+      "id": 10,
+      "name": "Gucci Bloom Eau de",
+      "brand": "Gucci",
+      "price": 79.99,
+      "old_price": 93.44,
+      "discount": 14.39,
+      "rating": 2.74,
+      "stock": 91,
+      "category": "fragrances",
+      "description": "Gucci Bloom by Gucci is a floral and captivating fragrance, with notes of tuberose, jasmine, and Rangoon creeper. It's a modern and romantic scent.",
+      "image": "https://cdn.dummyjson.com/product-images/fragrances/gucci-bloom-eau-de/thumbnail.webp",
+      "images": [
+        "https://cdn.dummyjson.com/product-images/fragrances/gucci-bloom-eau-de/1.webp",
+        "https://cdn.dummyjson.com/product-images/fragrances/gucci-bloom-eau-de/2.webp",
+        "https://cdn.dummyjson.com/product-images/fragrances/gucci-bloom-eau-de/3.webp"
+      ],
+      "link": "https://dummyjson.com/products/10"
+    },
+    {
+      "id": 11,
+      "name": "Annibale Colombo Bed",
+      "brand": "Annibale Colombo",
+      "price": 1899.99,
+      "old_price": 2078.08,
+      "discount": 8.57,
+      "rating": 4.77,
+      "stock": 88,
+      "category": "furniture",
+      "description": "The Annibale Colombo Bed is a luxurious and elegant bed frame, crafted with high-quality materials for a comfortable and stylish bedroom.",
+      "image": "https://cdn.dummyjson.com/product-images/furniture/annibale-colombo-bed/thumbnail.webp",
+      "images": [
+        "https://cdn.dummyjson.com/product-images/furniture/annibale-colombo-bed/1.webp",
+        "https://cdn.dummyjson.com/product-images/furniture/annibale-colombo-bed/2.webp",
+        "https://cdn.dummyjson.com/product-images/furniture/annibale-colombo-bed/3.webp"
+      ],
+      "link": "https://dummyjson.com/products/11"
+    },
+    {
+      "id": 12,
+      "name": "Annibale Colombo Sofa",
+      "brand": "Annibale Colombo",
+      "price": 2499.99,
+      "old_price": 2920.55,
+      "discount": 14.4,
+      "rating": 3.92,
+      "stock": 60,
+      "category": "furniture",
+      "description": "The Annibale Colombo Sofa is a sophisticated and comfortable seating option, featuring exquisite design and premium upholstery for your living room.",
+      "image": "https://cdn.dummyjson.com/product-images/furniture/annibale-colombo-sofa/thumbnail.webp",
+      "images": [
+        "https://cdn.dummyjson.com/product-images/furniture/annibale-colombo-sofa/1.webp",
+        "https://cdn.dummyjson.com/product-images/furniture/annibale-colombo-sofa/2.webp",
+        "https://cdn.dummyjson.com/product-images/furniture/annibale-colombo-sofa/3.webp"
+      ],
+      "link": "https://dummyjson.com/products/12"
+    },
+    {
+      "id": 13,
+      "name": "Bedside Table African Cherry",
+      "brand": "Furniture Co.",
+      "price": 299.99,
+      "old_price": 370.77,
+      "discount": 19.09,
+      "rating": 2.87,
+      "stock": 64,
+      "category": "furniture",
+      "description": "The Bedside Table in African Cherry is a stylish and functional addition to your bedroom, providing convenient storage space and a touch of elegance.",
+      "image": "https://cdn.dummyjson.com/product-images/furniture/bedside-table-african-cherry/thumbnail.webp",
+      "images": [
+        "https://cdn.dummyjson.com/product-images/furniture/bedside-table-african-cherry/1.webp",
+        "https://cdn.dummyjson.com/product-images/furniture/bedside-table-african-cherry/2.webp",
+        "https://cdn.dummyjson.com/product-images/furniture/bedside-table-african-cherry/3.webp"
+      ],
+      "link": "https://dummyjson.com/products/13"
+    },
+    {
+      "id": 14,
+      "name": "Knoll Saarinen Executive Conference Chair",
+      "brand": "Knoll",
+      "price": 499.99,
+      "old_price": 510.25,
+      "discount": 2.01,
+      "rating": 4.88,
+      "stock": 26,
+      "category": "furniture",
+      "description": "The Knoll Saarinen Executive Conference Chair is a modern and ergonomic chair, perfect for your office or conference room with its timeless design.",
+      "image": "https://cdn.dummyjson.com/product-images/furniture/knoll-saarinen-executive-conference-chair/thumbnail.webp",
+      "images": [
+        "https://cdn.dummyjson.com/product-images/furniture/knoll-saarinen-executive-conference-chair/1.webp",
+        "https://cdn.dummyjson.com/product-images/furniture/knoll-saarinen-executive-conference-chair/2.webp",
+        "https://cdn.dummyjson.com/product-images/furniture/knoll-saarinen-executive-conference-chair/3.webp"
+      ],
+      "link": "https://dummyjson.com/products/14"
+    },
+    {
+      "id": 15,
+      "name": "Wooden Bathroom Sink With Mirror",
+      "brand": "Bath Trends",
+      "price": 799.99,
+      "old_price": 877.18,
+      "discount": 8.8,
+      "rating": 3.59,
+      "stock": 7,
+      "category": "furniture",
+      "description": "The Wooden Bathroom Sink with Mirror is a unique and stylish addition to your bathroom, featuring a wooden sink countertop and a matching mirror.",
+      "image": "https://cdn.dummyjson.com/product-images/furniture/wooden-bathroom-sink-with-mirror/thumbnail.webp",
+      "images": [
+        "https://cdn.dummyjson.com/product-images/furniture/wooden-bathroom-sink-with-mirror/1.webp",
+        "https://cdn.dummyjson.com/product-images/furniture/wooden-bathroom-sink-with-mirror/2.webp",
+        "https://cdn.dummyjson.com/product-images/furniture/wooden-bathroom-sink-with-mirror/3.webp"
+      ],
+      "link": "https://dummyjson.com/products/15"
+    },
+    {
+      "id": 16,
+      "name": "Apple",
+      "brand": "Без бренда",
+      "price": 1.99,
+      "old_price": 2.28,
+      "discount": 12.62,
+      "rating": 4.19,
+      "stock": 8,
+      "category": "groceries",
+      "description": "Fresh and crisp apples, perfect for snacking or incorporating into various recipes.",
+      "image": "https://cdn.dummyjson.com/product-images/groceries/apple/thumbnail.webp",
+      "images": [
+        "https://cdn.dummyjson.com/product-images/groceries/apple/1.webp"
+      ],
+      "link": "https://dummyjson.com/products/16"
+    },
+    {
+      "id": 17,
+      "name": "Beef Steak",
+      "brand": "Без бренда",
+      "price": 12.99,
+      "old_price": 14.37,
+      "discount": 9.61,
+      "rating": 4.47,
+      "stock": 86,
+      "category": "groceries",
+      "description": "High-quality beef steak, great for grilling or cooking to your preferred level of doneness.",
+      "image": "https://cdn.dummyjson.com/product-images/groceries/beef-steak/thumbnail.webp",
+      "images": [
+        "https://cdn.dummyjson.com/product-images/groceries/beef-steak/1.webp"
+      ],
+      "link": "https://dummyjson.com/products/17"
+    },
+    {
+      "id": 18,
+      "name": "Cat Food",
+      "brand": "Без бренда",
+      "price": 8.99,
+      "old_price": 9.94,
+      "discount": 9.58,
+      "rating": 3.13,
+      "stock": 46,
+      "category": "groceries",
+      "description": "Nutritious cat food formulated to meet the dietary needs of your feline friend.",
+      "image": "https://cdn.dummyjson.com/product-images/groceries/cat-food/thumbnail.webp",
+      "images": [
+        "https://cdn.dummyjson.com/product-images/groceries/cat-food/1.webp"
+      ],
+      "link": "https://dummyjson.com/products/18"
+    },
+    {
+      "id": 19,
+      "name": "Chicken Meat",
+      "brand": "Без бренда",
+      "price": 9.99,
+      "old_price": 11.58,
+      "discount": 13.7,
+      "rating": 3.19,
+      "stock": 97,
+      "category": "groceries",
+      "description": "Fresh and tender chicken meat, suitable for various culinary preparations.",
+      "image": "https://cdn.dummyjson.com/product-images/groceries/chicken-meat/thumbnail.webp",
+      "images": [
+        "https://cdn.dummyjson.com/product-images/groceries/chicken-meat/1.webp",
+        "https://cdn.dummyjson.com/product-images/groceries/chicken-meat/2.webp"
+      ],
+      "link": "https://dummyjson.com/products/19"
+    },
+    {
+      "id": 20,
+      "name": "Cooking Oil",
+      "brand": "Без бренда",
+      "price": 4.99,
+      "old_price": 5.5,
+      "discount": 9.33,
+      "rating": 4.8,
+      "stock": 10,
+      "category": "groceries",
+      "description": "Versatile cooking oil suitable for frying, sautéing, and various culinary applications.",
+      "image": "https://cdn.dummyjson.com/product-images/groceries/cooking-oil/thumbnail.webp",
+      "images": [
+        "https://cdn.dummyjson.com/product-images/groceries/cooking-oil/1.webp"
+      ],
+      "link": "https://dummyjson.com/products/20"
+    },
+    {
+      "id": 21,
+      "name": "Cucumber",
+      "brand": "Без бренда",
+      "price": 1.49,
+      "old_price": 1.49,
+      "discount": 0.16,
+      "rating": 4.07,
+      "stock": 84,
+      "category": "groceries",
+      "description": "Crisp and hydrating cucumbers, ideal for salads, snacks, or as a refreshing side.",
+      "image": "https://cdn.dummyjson.com/product-images/groceries/cucumber/thumbnail.webp",
+      "images": [
+        "https://cdn.dummyjson.com/product-images/groceries/cucumber/1.webp"
+      ],
+      "link": "https://dummyjson.com/products/21"
+    },
+    {
+      "id": 22,
+      "name": "Dog Food",
+      "brand": "Без бренда",
+      "price": 10.99,
+      "old_price": 12.25,
+      "discount": 10.27,
+      "rating": 4.55,
+      "stock": 71,
+      "category": "groceries",
+      "description": "Specially formulated dog food designed to provide essential nutrients for your canine companion.",
+      "image": "https://cdn.dummyjson.com/product-images/groceries/dog-food/thumbnail.webp",
+      "images": [
+        "https://cdn.dummyjson.com/product-images/groceries/dog-food/1.webp"
+      ],
+      "link": "https://dummyjson.com/products/22"
+    },
+    {
+      "id": 23,
+      "name": "Eggs",
+      "brand": "Без бренда",
+      "price": 2.99,
+      "old_price": 3.36,
+      "discount": 11.05,
+      "rating": 2.53,
+      "stock": 9,
+      "category": "groceries",
+      "description": "Fresh eggs, a versatile ingredient for baking, cooking, or breakfast.",
+      "image": "https://cdn.dummyjson.com/product-images/groceries/eggs/thumbnail.webp",
+      "images": [
+        "https://cdn.dummyjson.com/product-images/groceries/eggs/1.webp"
+      ],
+      "link": "https://dummyjson.com/products/23"
+    },
+    {
+      "id": 24,
+      "name": "Fish Steak",
+      "brand": "Без бренда",
+      "price": 14.99,
+      "old_price": 15.65,
+      "discount": 4.23,
+      "rating": 3.78,
+      "stock": 74,
+      "category": "groceries",
+      "description": "Quality fish steak, suitable for grilling, baking, or pan-searing.",
+      "image": "https://cdn.dummyjson.com/product-images/groceries/fish-steak/thumbnail.webp",
+      "images": [
+        "https://cdn.dummyjson.com/product-images/groceries/fish-steak/1.webp"
+      ],
+      "link": "https://dummyjson.com/products/24"
+    },
+    {
+      "id": 25,
+      "name": "Green Bell Pepper",
+      "brand": "Без бренда",
+      "price": 1.29,
+      "old_price": 1.29,
+      "discount": 0.16,
+      "rating": 3.25,
+      "stock": 33,
+      "category": "groceries",
+      "description": "Fresh and vibrant green bell pepper, perfect for adding color and flavor to your dishes.",
+      "image": "https://cdn.dummyjson.com/product-images/groceries/green-bell-pepper/thumbnail.webp",
+      "images": [
+        "https://cdn.dummyjson.com/product-images/groceries/green-bell-pepper/1.webp"
+      ],
+      "link": "https://dummyjson.com/products/25"
+    },
+    {
+      "id": 26,
+      "name": "Green Chili Pepper",
+      "brand": "Без бренда",
+      "price": 0.99,
+      "old_price": 1.0,
+      "discount": 1,
+      "rating": 3.66,
+      "stock": 3,
+      "category": "groceries",
+      "description": "Spicy green chili pepper, ideal for adding heat to your favorite recipes.",
+      "image": "https://cdn.dummyjson.com/product-images/groceries/green-chili-pepper/thumbnail.webp",
+      "images": [
+        "https://cdn.dummyjson.com/product-images/groceries/green-chili-pepper/1.webp"
+      ],
+      "link": "https://dummyjson.com/products/26"
+    },
+    {
+      "id": 27,
+      "name": "Honey Jar",
+      "brand": "Без бренда",
+      "price": 6.99,
+      "old_price": 8.17,
+      "discount": 14.4,
+      "rating": 3.97,
+      "stock": 34,
+      "category": "groceries",
+      "description": "Pure and natural honey in a convenient jar, perfect for sweetening beverages or drizzling over food.",
+      "image": "https://cdn.dummyjson.com/product-images/groceries/honey-jar/thumbnail.webp",
+      "images": [
+        "https://cdn.dummyjson.com/product-images/groceries/honey-jar/1.webp"
+      ],
+      "link": "https://dummyjson.com/products/27"
+    },
+    {
+      "id": 28,
+      "name": "Ice Cream",
+      "brand": "Без бренда",
+      "price": 5.49,
+      "old_price": 6.01,
+      "discount": 8.69,
+      "rating": 3.39,
+      "stock": 27,
+      "category": "groceries",
+      "description": "Creamy and delicious ice cream, available in various flavors for a delightful treat.",
+      "image": "https://cdn.dummyjson.com/product-images/groceries/ice-cream/thumbnail.webp",
+      "images": [
+        "https://cdn.dummyjson.com/product-images/groceries/ice-cream/1.webp",
+        "https://cdn.dummyjson.com/product-images/groceries/ice-cream/2.webp",
+        "https://cdn.dummyjson.com/product-images/groceries/ice-cream/3.webp",
+        "https://cdn.dummyjson.com/product-images/groceries/ice-cream/4.webp"
+      ],
+      "link": "https://dummyjson.com/products/28"
+    },
+    {
+      "id": 29,
+      "name": "Juice",
+      "brand": "Без бренда",
+      "price": 3.99,
+      "old_price": 4.54,
+      "discount": 12.06,
+      "rating": 3.94,
+      "stock": 50,
+      "category": "groceries",
+      "description": "Refreshing fruit juice, packed with vitamins and great for staying hydrated.",
+      "image": "https://cdn.dummyjson.com/product-images/groceries/juice/thumbnail.webp",
+      "images": [
+        "https://cdn.dummyjson.com/product-images/groceries/juice/1.webp"
+      ],
+      "link": "https://dummyjson.com/products/29"
+    },
+    {
+      "id": 30,
+      "name": "Kiwi",
+      "brand": "Без бренда",
+      "price": 2.49,
+      "old_price": 2.94,
+      "discount": 15.22,
+      "rating": 4.93,
+      "stock": 99,
+      "category": "groceries",
+      "description": "Nutrient-rich kiwi, perfect for snacking or adding a tropical twist to your dishes.",
+      "image": "https://cdn.dummyjson.com/product-images/groceries/kiwi/thumbnail.webp",
+      "images": [
+        "https://cdn.dummyjson.com/product-images/groceries/kiwi/1.webp"
+      ],
+      "link": "https://dummyjson.com/products/30"
+    },
+    {
+      "id": 31,
+      "name": "Lemon",
+      "brand": "Без бренда",
+      "price": 0.79,
+      "old_price": 0.87,
+      "discount": 9.7,
+      "rating": 3.53,
+      "stock": 31,
+      "category": "groceries",
+      "description": "Zesty and tangy lemons, versatile for cooking, baking, or making refreshing beverages.",
+      "image": "https://cdn.dummyjson.com/product-images/groceries/lemon/thumbnail.webp",
+      "images": [
+        "https://cdn.dummyjson.com/product-images/groceries/lemon/1.webp"
+      ],
+      "link": "https://dummyjson.com/products/31"
+    },
+    {
+      "id": 32,
+      "name": "Milk",
+      "brand": "Без бренда",
+      "price": 3.49,
+      "old_price": 4.05,
+      "discount": 13.74,
+      "rating": 2.61,
+      "stock": 27,
+      "category": "groceries",
+      "description": "Fresh and nutritious milk, a staple for various recipes and daily consumption.",
+      "image": "https://cdn.dummyjson.com/product-images/groceries/milk/thumbnail.webp",
+      "images": [
+        "https://cdn.dummyjson.com/product-images/groceries/milk/1.webp"
+      ],
+      "link": "https://dummyjson.com/products/32"
+    },
+    {
+      "id": 33,
+      "name": "Mulberry",
+      "brand": "Без бренда",
+      "price": 4.99,
+      "old_price": 5.73,
+      "discount": 12.87,
+      "rating": 4.95,
+      "stock": 99,
+      "category": "groceries",
+      "description": "Sweet and juicy mulberries, perfect for snacking or adding to desserts and cereals.",
+      "image": "https://cdn.dummyjson.com/product-images/groceries/mulberry/thumbnail.webp",
+      "images": [
+        "https://cdn.dummyjson.com/product-images/groceries/mulberry/1.webp"
+      ],
+      "link": "https://dummyjson.com/products/33"
+    },
+    {
+      "id": 34,
+      "name": "Nescafe Coffee",
+      "brand": "Без бренда",
+      "price": 7.99,
+      "old_price": 8.12,
+      "discount": 1.59,
+      "rating": 4.82,
+      "stock": 57,
+      "category": "groceries",
+      "description": "Quality coffee from Nescafe, available in various blends for a rich and satisfying cup.",
+      "image": "https://cdn.dummyjson.com/product-images/groceries/nescafe-coffee/thumbnail.webp",
+      "images": [
+        "https://cdn.dummyjson.com/product-images/groceries/nescafe-coffee/1.webp"
+      ],
+      "link": "https://dummyjson.com/products/34"
+    },
+    {
+      "id": 35,
+      "name": "Potatoes",
+      "brand": "Без бренда",
+      "price": 2.29,
+      "old_price": 2.42,
+      "discount": 5.38,
+      "rating": 4.81,
+      "stock": 13,
+      "category": "groceries",
+      "description": "Versatile and starchy potatoes, great for roasting, mashing, or as a side dish.",
+      "image": "https://cdn.dummyjson.com/product-images/groceries/potatoes/thumbnail.webp",
+      "images": [
+        "https://cdn.dummyjson.com/product-images/groceries/potatoes/1.webp"
+      ],
+      "link": "https://dummyjson.com/products/35"
+    },
+    {
+      "id": 36,
+      "name": "Protein Powder",
+      "brand": "Без бренда",
+      "price": 19.99,
+      "old_price": 21.63,
+      "discount": 7.59,
+      "rating": 4.18,
+      "stock": 80,
+      "category": "groceries",
+      "description": "Nutrient-packed protein powder, ideal for supplementing your diet with essential proteins.",
+      "image": "https://cdn.dummyjson.com/product-images/groceries/protein-powder/thumbnail.webp",
+      "images": [
+        "https://cdn.dummyjson.com/product-images/groceries/protein-powder/1.webp"
+      ],
+      "link": "https://dummyjson.com/products/36"
+    },
+    {
+      "id": 37,
+      "name": "Red Onions",
+      "brand": "Без бренда",
+      "price": 1.99,
+      "old_price": 2.21,
+      "discount": 9.9,
+      "rating": 4.2,
+      "stock": 82,
+      "category": "groceries",
+      "description": "Flavorful and aromatic red onions, perfect for adding depth to your savory dishes.",
+      "image": "https://cdn.dummyjson.com/product-images/groceries/red-onions/thumbnail.webp",
+      "images": [
+        "https://cdn.dummyjson.com/product-images/groceries/red-onions/1.webp"
+      ],
+      "link": "https://dummyjson.com/products/37"
+    },
+    {
+      "id": 38,
+      "name": "Rice",
+      "brand": "Без бренда",
+      "price": 5.99,
+      "old_price": 6.6,
+      "discount": 9.29,
+      "rating": 3.18,
+      "stock": 59,
+      "category": "groceries",
+      "description": "High-quality rice, a staple for various cuisines and a versatile base for many dishes.",
+      "image": "https://cdn.dummyjson.com/product-images/groceries/rice/thumbnail.webp",
+      "images": [
+        "https://cdn.dummyjson.com/product-images/groceries/rice/1.webp"
+      ],
+      "link": "https://dummyjson.com/products/38"
+    },
+    {
+      "id": 39,
+      "name": "Soft Drinks",
+      "brand": "Без бренда",
+      "price": 1.99,
+      "old_price": 2.41,
+      "discount": 17.48,
+      "rating": 4.75,
+      "stock": 53,
+      "category": "groceries",
+      "description": "Assorted soft drinks in various flavors, perfect for refreshing beverages.",
+      "image": "https://cdn.dummyjson.com/product-images/groceries/soft-drinks/thumbnail.webp",
+      "images": [
+        "https://cdn.dummyjson.com/product-images/groceries/soft-drinks/1.webp"
+      ],
+      "link": "https://dummyjson.com/products/39"
+    },
+    {
+      "id": 40,
+      "name": "Strawberry",
+      "brand": "Без бренда",
+      "price": 3.99,
+      "old_price": 4.04,
+      "discount": 1.12,
+      "rating": 3.08,
+      "stock": 46,
+      "category": "groceries",
+      "description": "Sweet and succulent strawberries, great for snacking, desserts, or blending into smoothies.",
+      "image": "https://cdn.dummyjson.com/product-images/groceries/strawberry/thumbnail.webp",
+      "images": [
+        "https://cdn.dummyjson.com/product-images/groceries/strawberry/1.webp"
+      ],
+      "link": "https://dummyjson.com/products/40"
+    },
+    {
+      "id": 41,
+      "name": "Tissue Paper Box",
+      "brand": "Без бренда",
+      "price": 2.49,
+      "old_price": 2.87,
+      "discount": 13.28,
+      "rating": 2.69,
+      "stock": 86,
+      "category": "groceries",
+      "description": "Convenient tissue paper box for everyday use, providing soft and absorbent tissues.",
+      "image": "https://cdn.dummyjson.com/product-images/groceries/tissue-paper-box/thumbnail.webp",
+      "images": [
+        "https://cdn.dummyjson.com/product-images/groceries/tissue-paper-box/1.webp",
+        "https://cdn.dummyjson.com/product-images/groceries/tissue-paper-box/2.webp"
+      ],
+      "link": "https://dummyjson.com/products/41"
+    },
+    {
+      "id": 42,
+      "name": "Water",
+      "brand": "Без бренда",
+      "price": 0.99,
+      "old_price": 1.16,
+      "discount": 14.92,
+      "rating": 4.96,
+      "stock": 53,
+      "category": "groceries",
+      "description": "Pure and refreshing bottled water, essential for staying hydrated throughout the day.",
+      "image": "https://cdn.dummyjson.com/product-images/groceries/water/thumbnail.webp",
+      "images": [
+        "https://cdn.dummyjson.com/product-images/groceries/water/1.webp"
+      ],
+      "link": "https://dummyjson.com/products/42"
+    },
+    {
+      "id": 43,
+      "name": "Decoration Swing",
+      "brand": "Без бренда",
+      "price": 59.99,
+      "old_price": 66.96,
+      "discount": 10.41,
+      "rating": 3.16,
+      "stock": 47,
+      "category": "home-decoration",
+      "description": "The Decoration Swing is a charming addition to your home decor. Crafted with intricate details, it adds a touch of elegance and whimsy to any room.",
+      "image": "https://cdn.dummyjson.com/product-images/home-decoration/decoration-swing/thumbnail.webp",
+      "images": [
+        "https://cdn.dummyjson.com/product-images/home-decoration/decoration-swing/1.webp",
+        "https://cdn.dummyjson.com/product-images/home-decoration/decoration-swing/2.webp",
+        "https://cdn.dummyjson.com/product-images/home-decoration/decoration-swing/3.webp"
+      ],
+      "link": "https://dummyjson.com/products/43"
+    },
+    {
+      "id": 44,
+      "name": "Family Tree Photo Frame",
+      "brand": "Без бренда",
+      "price": 29.99,
+      "old_price": 35.23,
+      "discount": 14.87,
+      "rating": 4.53,
+      "stock": 77,
+      "category": "home-decoration",
+      "description": "The Family Tree Photo Frame is a sentimental and stylish way to display your cherished family memories. With multiple photo slots, it tells the story of your loved ones.",
+      "image": "https://cdn.dummyjson.com/product-images/home-decoration/family-tree-photo-frame/thumbnail.webp",
+      "images": [
+        "https://cdn.dummyjson.com/product-images/home-decoration/family-tree-photo-frame/1.webp"
+      ],
+      "link": "https://dummyjson.com/products/44"
+    },
+    {
+      "id": 45,
+      "name": "House Showpiece Plant",
+      "brand": "Без бренда",
+      "price": 39.99,
+      "old_price": 43.21,
+      "discount": 7.46,
+      "rating": 4.67,
+      "stock": 28,
+      "category": "home-decoration",
+      "description": "The House Showpiece Plant is an artificial plant that brings a touch of nature to your home without the need for maintenance. It adds greenery and style to any space.",
+      "image": "https://cdn.dummyjson.com/product-images/home-decoration/house-showpiece-plant/thumbnail.webp",
+      "images": [
+        "https://cdn.dummyjson.com/product-images/home-decoration/house-showpiece-plant/1.webp",
+        "https://cdn.dummyjson.com/product-images/home-decoration/house-showpiece-plant/2.webp",
+        "https://cdn.dummyjson.com/product-images/home-decoration/house-showpiece-plant/3.webp"
+      ],
+      "link": "https://dummyjson.com/products/45"
+    },
+    {
+      "id": 46,
+      "name": "Plant Pot",
+      "brand": "Без бренда",
+      "price": 14.99,
+      "old_price": 16.09,
+      "discount": 6.84,
+      "rating": 3.01,
+      "stock": 59,
+      "category": "home-decoration",
+      "description": "The Plant Pot is a stylish container for your favorite plants. With a sleek design, it complements your indoor or outdoor garden, adding a modern touch to your plant display.",
+      "image": "https://cdn.dummyjson.com/product-images/home-decoration/plant-pot/thumbnail.webp",
+      "images": [
+        "https://cdn.dummyjson.com/product-images/home-decoration/plant-pot/1.webp",
+        "https://cdn.dummyjson.com/product-images/home-decoration/plant-pot/2.webp",
+        "https://cdn.dummyjson.com/product-images/home-decoration/plant-pot/3.webp",
+        "https://cdn.dummyjson.com/product-images/home-decoration/plant-pot/4.webp"
+      ],
+      "link": "https://dummyjson.com/products/46"
+    },
+    {
+      "id": 47,
+      "name": "Table Lamp",
+      "brand": "Без бренда",
+      "price": 49.99,
+      "old_price": 53.8,
+      "discount": 7.09,
+      "rating": 3.55,
+      "stock": 9,
+      "category": "home-decoration",
+      "description": "The Table Lamp is a functional and decorative lighting solution for your living space. With a modern design, it provides both ambient and task lighting, enhancing the atmosphere.",
+      "image": "https://cdn.dummyjson.com/product-images/home-decoration/table-lamp/thumbnail.webp",
+      "images": [
+        "https://cdn.dummyjson.com/product-images/home-decoration/table-lamp/1.webp"
+      ],
+      "link": "https://dummyjson.com/products/47"
+    },
+    {
+      "id": 48,
+      "name": "Bamboo Spatula",
+      "brand": "Без бренда",
+      "price": 7.99,
+      "old_price": 8.22,
+      "discount": 2.84,
+      "rating": 3.27,
+      "stock": 37,
+      "category": "kitchen-accessories",
+      "description": "The Bamboo Spatula is a versatile kitchen tool made from eco-friendly bamboo. Ideal for flipping, stirring, and serving various dishes.",
+      "image": "https://cdn.dummyjson.com/product-images/kitchen-accessories/bamboo-spatula/thumbnail.webp",
+      "images": [
+        "https://cdn.dummyjson.com/product-images/kitchen-accessories/bamboo-spatula/1.webp"
+      ],
+      "link": "https://dummyjson.com/products/48"
+    },
+    {
+      "id": 49,
+      "name": "Black Aluminium Cup",
+      "brand": "Без бренда",
+      "price": 5.99,
+      "old_price": 7.1,
+      "discount": 15.65,
+      "rating": 4.46,
+      "stock": 75,
+      "category": "kitchen-accessories",
+      "description": "The Black Aluminium Cup is a stylish and durable cup suitable for both hot and cold beverages. Its sleek black design adds a modern touch to your drinkware collection.",
+      "image": "https://cdn.dummyjson.com/product-images/kitchen-accessories/black-aluminium-cup/thumbnail.webp",
+      "images": [
+        "https://cdn.dummyjson.com/product-images/kitchen-accessories/black-aluminium-cup/1.webp",
+        "https://cdn.dummyjson.com/product-images/kitchen-accessories/black-aluminium-cup/2.webp"
+      ],
+      "link": "https://dummyjson.com/products/49"
+    },
+    {
+      "id": 50,
+      "name": "Black Whisk",
+      "brand": "Без бренда",
+      "price": 9.99,
+      "old_price": 11.13,
+      "discount": 10.24,
+      "rating": 3.9,
+      "stock": 73,
+      "category": "kitchen-accessories",
+      "description": "The Black Whisk is a kitchen essential for whisking and beating ingredients. Its ergonomic handle and sleek design make it a practical and stylish tool.",
+      "image": "https://cdn.dummyjson.com/product-images/kitchen-accessories/black-whisk/thumbnail.webp",
+      "images": [
+        "https://cdn.dummyjson.com/product-images/kitchen-accessories/black-whisk/1.webp"
+      ],
+      "link": "https://dummyjson.com/products/50"
+    },
+    {
+      "id": 51,
+      "name": "Boxed Blender",
+      "brand": "Без бренда",
+      "price": 39.99,
+      "old_price": 43.12,
+      "discount": 7.26,
+      "rating": 4.56,
+      "stock": 9,
+      "category": "kitchen-accessories",
+      "description": "The Boxed Blender is a powerful and compact blender perfect for smoothies, shakes, and more. Its convenient design and multiple functions make it a versatile kitchen appliance.",
+      "image": "https://cdn.dummyjson.com/product-images/kitchen-accessories/boxed-blender/thumbnail.webp",
+      "images": [
+        "https://cdn.dummyjson.com/product-images/kitchen-accessories/boxed-blender/1.webp",
+        "https://cdn.dummyjson.com/product-images/kitchen-accessories/boxed-blender/2.webp",
+        "https://cdn.dummyjson.com/product-images/kitchen-accessories/boxed-blender/3.webp",
+        "https://cdn.dummyjson.com/product-images/kitchen-accessories/boxed-blender/4.webp"
+      ],
+      "link": "https://dummyjson.com/products/51"
+    },
+    {
+      "id": 52,
+      "name": "Carbon Steel Wok",
+      "brand": "Без бренда",
+      "price": 29.99,
+      "old_price": 32.09,
+      "discount": 6.53,
+      "rating": 4.05,
+      "stock": 40,
+      "category": "kitchen-accessories",
+      "description": "The Carbon Steel Wok is a versatile cooking pan suitable for stir-frying, sautéing, and deep frying. Its sturdy construction ensures even heat distribution for delicious meals.",
+      "image": "https://cdn.dummyjson.com/product-images/kitchen-accessories/carbon-steel-wok/thumbnail.webp",
+      "images": [
+        "https://cdn.dummyjson.com/product-images/kitchen-accessories/carbon-steel-wok/1.webp"
+      ],
+      "link": "https://dummyjson.com/products/52"
+    },
+    {
+      "id": 53,
+      "name": "Chopping Board",
+      "brand": "Без бренда",
+      "price": 12.99,
+      "old_price": 14.12,
+      "discount": 8.03,
+      "rating": 3.7,
+      "stock": 14,
+      "category": "kitchen-accessories",
+      "description": "The Chopping Board is an essential kitchen accessory for food preparation. Made from durable material, it provides a safe and hygienic surface for cutting and chopping.",
+      "image": "https://cdn.dummyjson.com/product-images/kitchen-accessories/chopping-board/thumbnail.webp",
+      "images": [
+        "https://cdn.dummyjson.com/product-images/kitchen-accessories/chopping-board/1.webp"
+      ],
+      "link": "https://dummyjson.com/products/53"
+    },
+    {
+      "id": 54,
+      "name": "Citrus Squeezer Yellow",
+      "brand": "Без бренда",
+      "price": 8.99,
+      "old_price": 10.23,
+      "discount": 12.1,
+      "rating": 4.63,
+      "stock": 22,
+      "category": "kitchen-accessories",
+      "description": "The Citrus Squeezer in Yellow is a handy tool for extracting juice from citrus fruits. Its vibrant color adds a cheerful touch to your kitchen gadgets.",
+      "image": "https://cdn.dummyjson.com/product-images/kitchen-accessories/citrus-squeezer-yellow/thumbnail.webp",
+      "images": [
+        "https://cdn.dummyjson.com/product-images/kitchen-accessories/citrus-squeezer-yellow/1.webp"
+      ],
+      "link": "https://dummyjson.com/products/54"
+    },
+    {
+      "id": 55,
+      "name": "Egg Slicer",
+      "brand": "Без бренда",
+      "price": 6.99,
+      "old_price": 8.2,
+      "discount": 14.76,
+      "rating": 3.09,
+      "stock": 40,
+      "category": "kitchen-accessories",
+      "description": "The Egg Slicer is a convenient tool for slicing boiled eggs evenly. It's perfect for salads, sandwiches, and other dishes where sliced eggs are desired.",
+      "image": "https://cdn.dummyjson.com/product-images/kitchen-accessories/egg-slicer/thumbnail.webp",
+      "images": [
+        "https://cdn.dummyjson.com/product-images/kitchen-accessories/egg-slicer/1.webp"
+      ],
+      "link": "https://dummyjson.com/products/55"
+    },
+    {
+      "id": 56,
+      "name": "Electric Stove",
+      "brand": "Без бренда",
+      "price": 49.99,
+      "old_price": 58.15,
+      "discount": 14.04,
+      "rating": 4.11,
+      "stock": 21,
+      "category": "kitchen-accessories",
+      "description": "The Electric Stove provides a portable and efficient cooking solution. Ideal for small kitchens or as an additional cooking surface for various culinary needs.",
+      "image": "https://cdn.dummyjson.com/product-images/kitchen-accessories/electric-stove/thumbnail.webp",
+      "images": [
+        "https://cdn.dummyjson.com/product-images/kitchen-accessories/electric-stove/1.webp",
+        "https://cdn.dummyjson.com/product-images/kitchen-accessories/electric-stove/2.webp",
+        "https://cdn.dummyjson.com/product-images/kitchen-accessories/electric-stove/3.webp",
+        "https://cdn.dummyjson.com/product-images/kitchen-accessories/electric-stove/4.webp"
+      ],
+      "link": "https://dummyjson.com/products/56"
+    },
+    {
+      "id": 57,
+      "name": "Fine Mesh Strainer",
+      "brand": "Без бренда",
+      "price": 9.99,
+      "old_price": 10.35,
+      "discount": 3.5,
+      "rating": 3.04,
+      "stock": 85,
+      "category": "kitchen-accessories",
+      "description": "The Fine Mesh Strainer is a versatile tool for straining liquids and sifting dry ingredients. Its fine mesh ensures efficient filtering for smooth cooking and baking.",
+      "image": "https://cdn.dummyjson.com/product-images/kitchen-accessories/fine-mesh-strainer/thumbnail.webp",
+      "images": [
+        "https://cdn.dummyjson.com/product-images/kitchen-accessories/fine-mesh-strainer/1.webp"
+      ],
+      "link": "https://dummyjson.com/products/57"
+    },
+    {
+      "id": 58,
+      "name": "Fork",
+      "brand": "Без бренда",
+      "price": 3.99,
+      "old_price": 4.34,
+      "discount": 8.07,
+      "rating": 3.11,
+      "stock": 7,
+      "category": "kitchen-accessories",
+      "description": "The Fork is a classic utensil for various dining and serving purposes. Its durable and ergonomic design makes it a reliable choice for everyday use.",
+      "image": "https://cdn.dummyjson.com/product-images/kitchen-accessories/fork/thumbnail.webp",
+      "images": [
+        "https://cdn.dummyjson.com/product-images/kitchen-accessories/fork/1.webp"
+      ],
+      "link": "https://dummyjson.com/products/58"
+    },
+    {
+      "id": 59,
+      "name": "Glass",
+      "brand": "Без бренда",
+      "price": 4.99,
+      "old_price": 5.42,
+      "discount": 7.92,
+      "rating": 4.02,
+      "stock": 46,
+      "category": "kitchen-accessories",
+      "description": "The Glass is a versatile and elegant drinking vessel suitable for a variety of beverages. Its clear design allows you to enjoy the colors and textures of your drinks.",
+      "image": "https://cdn.dummyjson.com/product-images/kitchen-accessories/glass/thumbnail.webp",
+      "images": [
+        "https://cdn.dummyjson.com/product-images/kitchen-accessories/glass/1.webp"
+      ],
+      "link": "https://dummyjson.com/products/59"
+    },
+    {
+      "id": 60,
+      "name": "Grater Black",
+      "brand": "Без бренда",
+      "price": 10.99,
+      "old_price": 11.4,
+      "discount": 3.56,
+      "rating": 3.21,
+      "stock": 84,
+      "category": "kitchen-accessories",
+      "description": "The Grater in Black is a handy kitchen tool for grating cheese, vegetables, and more. Its sleek design and sharp blades make food preparation efficient and easy.",
+      "image": "https://cdn.dummyjson.com/product-images/kitchen-accessories/grater-black/thumbnail.webp",
+      "images": [
+        "https://cdn.dummyjson.com/product-images/kitchen-accessories/grater-black/1.webp"
+      ],
+      "link": "https://dummyjson.com/products/60"
+    },
+    {
+      "id": 61,
+      "name": "Hand Blender",
+      "brand": "Без бренда",
+      "price": 34.99,
+      "old_price": 42.17,
+      "discount": 17.02,
+      "rating": 3.86,
+      "stock": 84,
+      "category": "kitchen-accessories",
+      "description": "The Hand Blender is a versatile kitchen appliance for blending, pureeing, and mixing. Its compact design and powerful motor make it a convenient tool for various recipes.",
+      "image": "https://cdn.dummyjson.com/product-images/kitchen-accessories/hand-blender/thumbnail.webp",
+      "images": [
+        "https://cdn.dummyjson.com/product-images/kitchen-accessories/hand-blender/1.webp"
+      ],
+      "link": "https://dummyjson.com/products/61"
+    },
+    {
+      "id": 62,
+      "name": "Ice Cube Tray",
+      "brand": "Без бренда",
+      "price": 5.99,
+      "old_price": 6.03,
+      "discount": 0.63,
+      "rating": 4.71,
+      "stock": 13,
+      "category": "kitchen-accessories",
+      "description": "The Ice Cube Tray is a practical accessory for making ice cubes in various shapes. Perfect for keeping your drinks cool and adding a fun element to your beverages.",
+      "image": "https://cdn.dummyjson.com/product-images/kitchen-accessories/ice-cube-tray/thumbnail.webp",
+      "images": [
+        "https://cdn.dummyjson.com/product-images/kitchen-accessories/ice-cube-tray/1.webp"
+      ],
+      "link": "https://dummyjson.com/products/62"
+    },
+    {
+      "id": 63,
+      "name": "Kitchen Sieve",
+      "brand": "Без бренда",
+      "price": 7.99,
+      "old_price": 9.85,
+      "discount": 18.91,
+      "rating": 3.09,
+      "stock": 68,
+      "category": "kitchen-accessories",
+      "description": "The Kitchen Sieve is a versatile tool for sifting and straining dry and wet ingredients. Its fine mesh design ensures smooth results in your cooking and baking.",
+      "image": "https://cdn.dummyjson.com/product-images/kitchen-accessories/kitchen-sieve/thumbnail.webp",
+      "images": [
+        "https://cdn.dummyjson.com/product-images/kitchen-accessories/kitchen-sieve/1.webp"
+      ],
+      "link": "https://dummyjson.com/products/63"
+    },
+    {
+      "id": 64,
+      "name": "Knife",
+      "brand": "Без бренда",
+      "price": 14.99,
+      "old_price": 18.47,
+      "discount": 18.86,
+      "rating": 3.26,
+      "stock": 7,
+      "category": "kitchen-accessories",
+      "description": "The Knife is an essential kitchen tool for chopping, slicing, and dicing. Its sharp blade and ergonomic handle make it a reliable choice for food preparation.",
+      "image": "https://cdn.dummyjson.com/product-images/kitchen-accessories/knife/thumbnail.webp",
+      "images": [
+        "https://cdn.dummyjson.com/product-images/kitchen-accessories/knife/1.webp"
+      ],
+      "link": "https://dummyjson.com/products/64"
+    },
+    {
+      "id": 65,
+      "name": "Lunch Box",
+      "brand": "Без бренда",
+      "price": 12.99,
+      "old_price": 14.49,
+      "discount": 10.34,
+      "rating": 4.93,
+      "stock": 94,
+      "category": "kitchen-accessories",
+      "description": "The Lunch Box is a convenient and portable container for packing and carrying your meals. With compartments for different foods, it's perfect for on-the-go dining.",
+      "image": "https://cdn.dummyjson.com/product-images/kitchen-accessories/lunch-box/thumbnail.webp",
+      "images": [
+        "https://cdn.dummyjson.com/product-images/kitchen-accessories/lunch-box/1.webp"
+      ],
+      "link": "https://dummyjson.com/products/65"
+    },
+    {
+      "id": 66,
+      "name": "Microwave Oven",
+      "brand": "Без бренда",
+      "price": 89.99,
+      "old_price": 102.41,
+      "discount": 12.13,
+      "rating": 4.82,
+      "stock": 59,
+      "category": "kitchen-accessories",
+      "description": "The Microwave Oven is a versatile kitchen appliance for quick and efficient cooking, reheating, and defrosting. Its compact size makes it suitable for various kitchen setups.",
+      "image": "https://cdn.dummyjson.com/product-images/kitchen-accessories/microwave-oven/thumbnail.webp",
+      "images": [
+        "https://cdn.dummyjson.com/product-images/kitchen-accessories/microwave-oven/1.webp",
+        "https://cdn.dummyjson.com/product-images/kitchen-accessories/microwave-oven/2.webp",
+        "https://cdn.dummyjson.com/product-images/kitchen-accessories/microwave-oven/3.webp",
+        "https://cdn.dummyjson.com/product-images/kitchen-accessories/microwave-oven/4.webp"
+      ],
+      "link": "https://dummyjson.com/products/66"
+    },
+    {
+      "id": 67,
+      "name": "Mug Tree Stand",
+      "brand": "Без бренда",
+      "price": 15.99,
+      "old_price": 17.62,
+      "discount": 9.25,
+      "rating": 2.64,
+      "stock": 88,
+      "category": "kitchen-accessories",
+      "description": "The Mug Tree Stand is a stylish and space-saving solution for organizing your mugs. Keep your favorite mugs easily accessible and neatly displayed in your kitchen.",
+      "image": "https://cdn.dummyjson.com/product-images/kitchen-accessories/mug-tree-stand/thumbnail.webp",
+      "images": [
+        "https://cdn.dummyjson.com/product-images/kitchen-accessories/mug-tree-stand/1.webp",
+        "https://cdn.dummyjson.com/product-images/kitchen-accessories/mug-tree-stand/2.webp"
+      ],
+      "link": "https://dummyjson.com/products/67"
+    },
+    {
+      "id": 68,
+      "name": "Pan",
+      "brand": "Без бренда",
+      "price": 24.99,
+      "old_price": 25.76,
+      "discount": 3,
+      "rating": 2.79,
+      "stock": 90,
+      "category": "kitchen-accessories",
+      "description": "The Pan is a versatile and essential cookware item for frying, sautéing, and cooking various dishes. Its non-stick coating ensures easy food release and cleanup.",
+      "image": "https://cdn.dummyjson.com/product-images/kitchen-accessories/pan/thumbnail.webp",
+      "images": [
+        "https://cdn.dummyjson.com/product-images/kitchen-accessories/pan/1.webp"
+      ],
+      "link": "https://dummyjson.com/products/68"
+    },
+    {
+      "id": 69,
+      "name": "Plate",
+      "brand": "Без бренда",
+      "price": 3.99,
+      "old_price": 4.3,
+      "discount": 7.31,
+      "rating": 3.65,
+      "stock": 66,
+      "category": "kitchen-accessories",
+      "description": "The Plate is a classic and essential dishware item for serving meals. Its durable and stylish design makes it suitable for everyday use or special occasions.",
+      "image": "https://cdn.dummyjson.com/product-images/kitchen-accessories/plate/thumbnail.webp",
+      "images": [
+        "https://cdn.dummyjson.com/product-images/kitchen-accessories/plate/1.webp"
+      ],
+      "link": "https://dummyjson.com/products/69"
+    },
+    {
+      "id": 70,
+      "name": "Red Tongs",
+      "brand": "Без бренда",
+      "price": 6.99,
+      "old_price": 8.18,
+      "discount": 14.52,
+      "rating": 4.42,
+      "stock": 82,
+      "category": "kitchen-accessories",
+      "description": "The Red Tongs are versatile kitchen tongs suitable for various cooking and serving tasks. Their vibrant color adds a pop of excitement to your kitchen utensils.",
+      "image": "https://cdn.dummyjson.com/product-images/kitchen-accessories/red-tongs/thumbnail.webp",
+      "images": [
+        "https://cdn.dummyjson.com/product-images/kitchen-accessories/red-tongs/1.webp"
+      ],
+      "link": "https://dummyjson.com/products/70"
+    },
+    {
+      "id": 71,
+      "name": "Silver Pot With Glass Cap",
+      "brand": "Без бренда",
+      "price": 39.99,
+      "old_price": 42.41,
+      "discount": 5.7,
+      "rating": 3.22,
+      "stock": 40,
+      "category": "kitchen-accessories",
+      "description": "The Silver Pot with Glass Cap is a stylish and functional cookware item for boiling, simmering, and preparing delicious meals. Its glass cap allows you to monitor cooking progress.",
+      "image": "https://cdn.dummyjson.com/product-images/kitchen-accessories/silver-pot-with-glass-cap/thumbnail.webp",
+      "images": [
+        "https://cdn.dummyjson.com/product-images/kitchen-accessories/silver-pot-with-glass-cap/1.webp"
+      ],
+      "link": "https://dummyjson.com/products/71"
+    },
+    {
+      "id": 72,
+      "name": "Slotted Turner",
+      "brand": "Без бренда",
+      "price": 8.99,
+      "old_price": 10.38,
+      "discount": 13.35,
+      "rating": 3.4,
+      "stock": 88,
+      "category": "kitchen-accessories",
+      "description": "The Slotted Turner is a kitchen utensil designed for flipping and turning food items. Its slotted design allows excess liquid to drain, making it ideal for frying and sautéing.",
+      "image": "https://cdn.dummyjson.com/product-images/kitchen-accessories/slotted-turner/thumbnail.webp",
+      "images": [
+        "https://cdn.dummyjson.com/product-images/kitchen-accessories/slotted-turner/1.webp"
+      ],
+      "link": "https://dummyjson.com/products/72"
+    },
+    {
+      "id": 73,
+      "name": "Spice Rack",
+      "brand": "Без бренда",
+      "price": 19.99,
+      "old_price": 22.74,
+      "discount": 12.09,
+      "rating": 4.87,
+      "stock": 79,
+      "category": "kitchen-accessories",
+      "description": "The Spice Rack is a convenient organizer for your spices and seasonings. Keep your kitchen essentials within reach and neatly arranged with this stylish spice rack.",
+      "image": "https://cdn.dummyjson.com/product-images/kitchen-accessories/spice-rack/thumbnail.webp",
+      "images": [
+        "https://cdn.dummyjson.com/product-images/kitchen-accessories/spice-rack/1.webp"
+      ],
+      "link": "https://dummyjson.com/products/73"
+    },
+    {
+      "id": 74,
+      "name": "Spoon",
+      "brand": "Без бренда",
+      "price": 4.99,
+      "old_price": 5.07,
+      "discount": 1.53,
+      "rating": 4.03,
+      "stock": 59,
+      "category": "kitchen-accessories",
+      "description": "The Spoon is a versatile kitchen utensil for stirring, serving, and tasting. Its ergonomic design and durable construction make it an essential tool for every kitchen.",
+      "image": "https://cdn.dummyjson.com/product-images/kitchen-accessories/spoon/thumbnail.webp",
+      "images": [
+        "https://cdn.dummyjson.com/product-images/kitchen-accessories/spoon/1.webp"
+      ],
+      "link": "https://dummyjson.com/products/74"
+    },
+    {
+      "id": 75,
+      "name": "Tray",
+      "brand": "Без бренда",
+      "price": 16.99,
+      "old_price": 18.36,
+      "discount": 7.48,
+      "rating": 4.62,
+      "stock": 71,
+      "category": "kitchen-accessories",
+      "description": "The Tray is a functional and decorative item for serving snacks, appetizers, or drinks. Its stylish design makes it a versatile accessory for entertaining guests.",
+      "image": "https://cdn.dummyjson.com/product-images/kitchen-accessories/tray/thumbnail.webp",
+      "images": [
+        "https://cdn.dummyjson.com/product-images/kitchen-accessories/tray/1.webp"
+      ],
+      "link": "https://dummyjson.com/products/75"
+    },
+    {
+      "id": 76,
+      "name": "Wooden Rolling Pin",
+      "brand": "Без бренда",
+      "price": 11.99,
+      "old_price": 13.29,
+      "discount": 9.75,
+      "rating": 2.92,
+      "stock": 80,
+      "category": "kitchen-accessories",
+      "description": "The Wooden Rolling Pin is a classic kitchen tool for rolling out dough for baking. Its smooth surface and sturdy handles make it easy to achieve uniform thickness.",
+      "image": "https://cdn.dummyjson.com/product-images/kitchen-accessories/wooden-rolling-pin/thumbnail.webp",
+      "images": [
+        "https://cdn.dummyjson.com/product-images/kitchen-accessories/wooden-rolling-pin/1.webp"
+      ],
+      "link": "https://dummyjson.com/products/76"
+    },
+    {
+      "id": 77,
+      "name": "Yellow Peeler",
+      "brand": "Без бренда",
+      "price": 5.99,
+      "old_price": 6.84,
+      "discount": 12.48,
+      "rating": 4.24,
+      "stock": 35,
+      "category": "kitchen-accessories",
+      "description": "The Yellow Peeler is a handy tool for peeling fruits and vegetables with ease. Its bright yellow color adds a cheerful touch to your kitchen gadgets.",
+      "image": "https://cdn.dummyjson.com/product-images/kitchen-accessories/yellow-peeler/thumbnail.webp",
+      "images": [
+        "https://cdn.dummyjson.com/product-images/kitchen-accessories/yellow-peeler/1.webp"
+      ],
+      "link": "https://dummyjson.com/products/77"
+    },
+    {
+      "id": 78,
+      "name": "Apple MacBook Pro 14 Inch Space Grey",
+      "brand": "Apple",
+      "price": 1999.99,
+      "old_price": 2098.41,
+      "discount": 4.69,
+      "rating": 3.65,
+      "stock": 24,
+      "category": "laptops",
+      "description": "The MacBook Pro 14 Inch in Space Grey is a powerful and sleek laptop, featuring Apple's M1 Pro chip for exceptional performance and a stunning Retina display.",
+      "image": "https://cdn.dummyjson.com/product-images/laptops/apple-macbook-pro-14-inch-space-grey/thumbnail.webp",
+      "images": [
+        "https://cdn.dummyjson.com/product-images/laptops/apple-macbook-pro-14-inch-space-grey/1.webp",
+        "https://cdn.dummyjson.com/product-images/laptops/apple-macbook-pro-14-inch-space-grey/2.webp",
+        "https://cdn.dummyjson.com/product-images/laptops/apple-macbook-pro-14-inch-space-grey/3.webp"
+      ],
+      "link": "https://dummyjson.com/products/78"
+    },
+    {
+      "id": 79,
+      "name": "Asus Zenbook Pro Dual Screen Laptop",
+      "brand": "Asus",
+      "price": 1799.99,
+      "old_price": 2025.65,
+      "discount": 11.14,
+      "rating": 3.95,
+      "stock": 45,
+      "category": "laptops",
+      "description": "The Asus Zenbook Pro Dual Screen Laptop is a high-performance device with dual screens, providing productivity and versatility for creative professionals.",
+      "image": "https://cdn.dummyjson.com/product-images/laptops/asus-zenbook-pro-dual-screen-laptop/thumbnail.webp",
+      "images": [
+        "https://cdn.dummyjson.com/product-images/laptops/asus-zenbook-pro-dual-screen-laptop/1.webp",
+        "https://cdn.dummyjson.com/product-images/laptops/asus-zenbook-pro-dual-screen-laptop/2.webp",
+        "https://cdn.dummyjson.com/product-images/laptops/asus-zenbook-pro-dual-screen-laptop/3.webp"
+      ],
+      "link": "https://dummyjson.com/products/79"
+    },
+    {
+      "id": 80,
+      "name": "Huawei Matebook X Pro",
+      "brand": "Huawei",
+      "price": 1399.99,
+      "old_price": 1544.9,
+      "discount": 9.38,
+      "rating": 4.98,
+      "stock": 75,
+      "category": "laptops",
+      "description": "The Huawei Matebook X Pro is a slim and stylish laptop with a high-resolution touchscreen display, offering a premium experience for users on the go.",
+      "image": "https://cdn.dummyjson.com/product-images/laptops/huawei-matebook-x-pro/thumbnail.webp",
+      "images": [
+        "https://cdn.dummyjson.com/product-images/laptops/huawei-matebook-x-pro/1.webp",
+        "https://cdn.dummyjson.com/product-images/laptops/huawei-matebook-x-pro/2.webp",
+        "https://cdn.dummyjson.com/product-images/laptops/huawei-matebook-x-pro/3.webp"
+      ],
+      "link": "https://dummyjson.com/products/80"
+    },
+    {
+      "id": 81,
+      "name": "Lenovo Yoga 920",
+      "brand": "Lenovo",
+      "price": 1099.99,
+      "old_price": 1177.09,
+      "discount": 6.55,
+      "rating": 2.86,
+      "stock": 40,
+      "category": "laptops",
+      "description": "The Lenovo Yoga 920 is a 2-in-1 convertible laptop with a flexible hinge, allowing you to use it as a laptop or tablet, offering versatility and portability.",
+      "image": "https://cdn.dummyjson.com/product-images/laptops/lenovo-yoga-920/thumbnail.webp",
+      "images": [
+        "https://cdn.dummyjson.com/product-images/laptops/lenovo-yoga-920/1.webp",
+        "https://cdn.dummyjson.com/product-images/laptops/lenovo-yoga-920/2.webp",
+        "https://cdn.dummyjson.com/product-images/laptops/lenovo-yoga-920/3.webp"
+      ],
+      "link": "https://dummyjson.com/products/81"
+    },
+    {
+      "id": 82,
+      "name": "New DELL XPS 13 9300 Laptop",
+      "brand": "Dell",
+      "price": 1499.99,
+      "old_price": 1702.41,
+      "discount": 11.89,
+      "rating": 2.67,
+      "stock": 74,
+      "category": "laptops",
+      "description": "The New DELL XPS 13 9300 Laptop is a compact and powerful device, featuring a virtually borderless InfinityEdge display and high-end performance for various tasks.",
+      "image": "https://cdn.dummyjson.com/product-images/laptops/new-dell-xps-13-9300-laptop/thumbnail.webp",
+      "images": [
+        "https://cdn.dummyjson.com/product-images/laptops/new-dell-xps-13-9300-laptop/1.webp",
+        "https://cdn.dummyjson.com/product-images/laptops/new-dell-xps-13-9300-laptop/2.webp",
+        "https://cdn.dummyjson.com/product-images/laptops/new-dell-xps-13-9300-laptop/3.webp"
+      ],
+      "link": "https://dummyjson.com/products/82"
+    },
+    {
+      "id": 83,
+      "name": "Blue & Black Check Shirt",
+      "brand": "Fashion Trends",
+      "price": 29.99,
+      "old_price": 35.43,
+      "discount": 15.35,
+      "rating": 3.64,
+      "stock": 38,
+      "category": "mens-shirts",
+      "description": "The Blue & Black Check Shirt is a stylish and comfortable men's shirt featuring a classic check pattern. Made from high-quality fabric, it's suitable for both casual and semi-formal occasions.",
+      "image": "https://cdn.dummyjson.com/product-images/mens-shirts/blue-&-black-check-shirt/thumbnail.webp",
+      "images": [
+        "https://cdn.dummyjson.com/product-images/mens-shirts/blue-&-black-check-shirt/1.webp",
+        "https://cdn.dummyjson.com/product-images/mens-shirts/blue-&-black-check-shirt/2.webp",
+        "https://cdn.dummyjson.com/product-images/mens-shirts/blue-&-black-check-shirt/3.webp",
+        "https://cdn.dummyjson.com/product-images/mens-shirts/blue-&-black-check-shirt/4.webp"
+      ],
+      "link": "https://dummyjson.com/products/83"
+    },
+    {
+      "id": 84,
+      "name": "Gigabyte Aorus Men Tshirt",
+      "brand": "Gigabyte",
+      "price": 24.99,
+      "old_price": 25.23,
+      "discount": 0.94,
+      "rating": 3.18,
+      "stock": 90,
+      "category": "mens-shirts",
+      "description": "The Gigabyte Aorus Men Tshirt is a cool and casual shirt for gaming enthusiasts. With the Aorus logo and sleek design, it's perfect for expressing your gaming style.",
+      "image": "https://cdn.dummyjson.com/product-images/mens-shirts/gigabyte-aorus-men-tshirt/thumbnail.webp",
+      "images": [
+        "https://cdn.dummyjson.com/product-images/mens-shirts/gigabyte-aorus-men-tshirt/1.webp",
+        "https://cdn.dummyjson.com/product-images/mens-shirts/gigabyte-aorus-men-tshirt/2.webp",
+        "https://cdn.dummyjson.com/product-images/mens-shirts/gigabyte-aorus-men-tshirt/3.webp",
+        "https://cdn.dummyjson.com/product-images/mens-shirts/gigabyte-aorus-men-tshirt/4.webp"
+      ],
+      "link": "https://dummyjson.com/products/84"
+    },
+    {
+      "id": 85,
+      "name": "Man Plaid Shirt",
+      "brand": "Classic Wear",
+      "price": 34.99,
+      "old_price": 43.47,
+      "discount": 19.5,
+      "rating": 3.46,
+      "stock": 82,
+      "category": "mens-shirts",
+      "description": "The Man Plaid Shirt is a timeless and versatile men's shirt with a classic plaid pattern. Its comfortable fit and casual style make it a wardrobe essential for various occasions.",
+      "image": "https://cdn.dummyjson.com/product-images/mens-shirts/man-plaid-shirt/thumbnail.webp",
+      "images": [
+        "https://cdn.dummyjson.com/product-images/mens-shirts/man-plaid-shirt/1.webp",
+        "https://cdn.dummyjson.com/product-images/mens-shirts/man-plaid-shirt/2.webp",
+        "https://cdn.dummyjson.com/product-images/mens-shirts/man-plaid-shirt/3.webp",
+        "https://cdn.dummyjson.com/product-images/mens-shirts/man-plaid-shirt/4.webp"
+      ],
+      "link": "https://dummyjson.com/products/85"
+    },
+    {
+      "id": 86,
+      "name": "Man Short Sleeve Shirt",
+      "brand": "Casual Comfort",
+      "price": 19.99,
+      "old_price": 21.46,
+      "discount": 6.83,
+      "rating": 2.9,
+      "stock": 2,
+      "category": "mens-shirts",
+      "description": "The Man Short Sleeve Shirt is a breezy and stylish option for warm days. With a comfortable fit and short sleeves, it's perfect for a laid-back yet polished look.",
+      "image": "https://cdn.dummyjson.com/product-images/mens-shirts/man-short-sleeve-shirt/thumbnail.webp",
+      "images": [
+        "https://cdn.dummyjson.com/product-images/mens-shirts/man-short-sleeve-shirt/1.webp",
+        "https://cdn.dummyjson.com/product-images/mens-shirts/man-short-sleeve-shirt/2.webp",
+        "https://cdn.dummyjson.com/product-images/mens-shirts/man-short-sleeve-shirt/3.webp",
+        "https://cdn.dummyjson.com/product-images/mens-shirts/man-short-sleeve-shirt/4.webp"
+      ],
+      "link": "https://dummyjson.com/products/86"
+    },
+    {
+      "id": 87,
+      "name": "Men Check Shirt",
+      "brand": "Urban Chic",
+      "price": 27.99,
+      "old_price": 31.58,
+      "discount": 11.38,
+      "rating": 2.72,
+      "stock": 95,
+      "category": "mens-shirts",
+      "description": "The Men Check Shirt is a classic and versatile shirt featuring a stylish check pattern. Suitable for various occasions, it adds a smart and polished touch to your wardrobe.",
+      "image": "https://cdn.dummyjson.com/product-images/mens-shirts/men-check-shirt/thumbnail.webp",
+      "images": [
+        "https://cdn.dummyjson.com/product-images/mens-shirts/men-check-shirt/1.webp",
+        "https://cdn.dummyjson.com/product-images/mens-shirts/men-check-shirt/2.webp",
+        "https://cdn.dummyjson.com/product-images/mens-shirts/men-check-shirt/3.webp",
+        "https://cdn.dummyjson.com/product-images/mens-shirts/men-check-shirt/4.webp"
+      ],
+      "link": "https://dummyjson.com/products/87"
+    },
+    {
+      "id": 88,
+      "name": "Nike Air Jordan 1 Red And Black",
+      "brand": "Nike",
+      "price": 149.99,
+      "old_price": 156.44,
+      "discount": 4.12,
+      "rating": 4.77,
+      "stock": 7,
+      "category": "mens-shoes",
+      "description": "The Nike Air Jordan 1 in Red and Black is an iconic basketball sneaker known for its stylish design and high-performance features, making it a favorite among sneaker enthusiasts and athletes.",
+      "image": "https://cdn.dummyjson.com/product-images/mens-shoes/nike-air-jordan-1-red-and-black/thumbnail.webp",
+      "images": [
+        "https://cdn.dummyjson.com/product-images/mens-shoes/nike-air-jordan-1-red-and-black/1.webp",
+        "https://cdn.dummyjson.com/product-images/mens-shoes/nike-air-jordan-1-red-and-black/2.webp",
+        "https://cdn.dummyjson.com/product-images/mens-shoes/nike-air-jordan-1-red-and-black/3.webp",
+        "https://cdn.dummyjson.com/product-images/mens-shoes/nike-air-jordan-1-red-and-black/4.webp"
+      ],
+      "link": "https://dummyjson.com/products/88"
+    },
+    {
+      "id": 89,
+      "name": "Nike Baseball Cleats",
+      "brand": "Nike",
+      "price": 79.99,
+      "old_price": 97.6,
+      "discount": 18.04,
+      "rating": 3.88,
+      "stock": 12,
+      "category": "mens-shoes",
+      "description": "Nike Baseball Cleats are designed for maximum traction and performance on the baseball field. They provide stability and support for players during games and practices.",
+      "image": "https://cdn.dummyjson.com/product-images/mens-shoes/nike-baseball-cleats/thumbnail.webp",
+      "images": [
+        "https://cdn.dummyjson.com/product-images/mens-shoes/nike-baseball-cleats/1.webp",
+        "https://cdn.dummyjson.com/product-images/mens-shoes/nike-baseball-cleats/2.webp",
+        "https://cdn.dummyjson.com/product-images/mens-shoes/nike-baseball-cleats/3.webp",
+        "https://cdn.dummyjson.com/product-images/mens-shoes/nike-baseball-cleats/4.webp"
+      ],
+      "link": "https://dummyjson.com/products/89"
+    },
+    {
+      "id": 90,
+      "name": "Puma Future Rider Trainers",
+      "brand": "Puma",
+      "price": 89.99,
+      "old_price": 93.94,
+      "discount": 4.2,
+      "rating": 4.9,
+      "stock": 90,
+      "category": "mens-shoes",
+      "description": "The Puma Future Rider Trainers offer a blend of retro style and modern comfort. Perfect for casual wear, these trainers provide a fashionable and comfortable option for everyday use.",
+      "image": "https://cdn.dummyjson.com/product-images/mens-shoes/puma-future-rider-trainers/thumbnail.webp",
+      "images": [
+        "https://cdn.dummyjson.com/product-images/mens-shoes/puma-future-rider-trainers/1.webp",
+        "https://cdn.dummyjson.com/product-images/mens-shoes/puma-future-rider-trainers/2.webp",
+        "https://cdn.dummyjson.com/product-images/mens-shoes/puma-future-rider-trainers/3.webp",
+        "https://cdn.dummyjson.com/product-images/mens-shoes/puma-future-rider-trainers/4.webp"
+      ],
+      "link": "https://dummyjson.com/products/90"
+    },
+    {
+      "id": 91,
+      "name": "Sports Sneakers Off White & Red",
+      "brand": "Off White",
+      "price": 119.99,
+      "old_price": 126.27,
+      "discount": 4.97,
+      "rating": 4.77,
+      "stock": 17,
+      "category": "mens-shoes",
+      "description": "The Sports Sneakers in Off White and Red combine style and functionality, making them a fashionable choice for sports enthusiasts. The red and off-white color combination adds a bold and energetic touch.",
+      "image": "https://cdn.dummyjson.com/product-images/mens-shoes/sports-sneakers-off-white-&-red/thumbnail.webp",
+      "images": [
+        "https://cdn.dummyjson.com/product-images/mens-shoes/sports-sneakers-off-white-&-red/1.webp",
+        "https://cdn.dummyjson.com/product-images/mens-shoes/sports-sneakers-off-white-&-red/2.webp",
+        "https://cdn.dummyjson.com/product-images/mens-shoes/sports-sneakers-off-white-&-red/3.webp",
+        "https://cdn.dummyjson.com/product-images/mens-shoes/sports-sneakers-off-white-&-red/4.webp"
+      ],
+      "link": "https://dummyjson.com/products/91"
+    },
+    {
+      "id": 92,
+      "name": "Sports Sneakers Off White Red",
+      "brand": "Off White",
+      "price": 109.99,
+      "old_price": 110.03,
+      "discount": 0.04,
+      "rating": 4.69,
+      "stock": 62,
+      "category": "mens-shoes",
+      "description": "Another variant of the Sports Sneakers in Off White Red, featuring a unique design. These sneakers offer style and comfort for casual occasions.",
+      "image": "https://cdn.dummyjson.com/product-images/mens-shoes/sports-sneakers-off-white-red/thumbnail.webp",
+      "images": [
+        "https://cdn.dummyjson.com/product-images/mens-shoes/sports-sneakers-off-white-red/1.webp",
+        "https://cdn.dummyjson.com/product-images/mens-shoes/sports-sneakers-off-white-red/2.webp",
+        "https://cdn.dummyjson.com/product-images/mens-shoes/sports-sneakers-off-white-red/3.webp",
+        "https://cdn.dummyjson.com/product-images/mens-shoes/sports-sneakers-off-white-red/4.webp"
+      ],
+      "link": "https://dummyjson.com/products/92"
+    },
+    {
+      "id": 93,
+      "name": "Brown Leather Belt Watch",
+      "brand": "Fashion Timepieces",
+      "price": 89.99,
+      "old_price": 95.72,
+      "discount": 5.99,
+      "rating": 4.19,
+      "stock": 32,
+      "category": "mens-watches",
+      "description": "The Brown Leather Belt Watch is a stylish timepiece with a classic design. Featuring a genuine leather strap and a sleek dial, it adds a touch of sophistication to your look.",
+      "image": "https://cdn.dummyjson.com/product-images/mens-watches/brown-leather-belt-watch/thumbnail.webp",
+      "images": [
+        "https://cdn.dummyjson.com/product-images/mens-watches/brown-leather-belt-watch/1.webp",
+        "https://cdn.dummyjson.com/product-images/mens-watches/brown-leather-belt-watch/2.webp",
+        "https://cdn.dummyjson.com/product-images/mens-watches/brown-leather-belt-watch/3.webp"
+      ],
+      "link": "https://dummyjson.com/products/93"
+    },
+    {
+      "id": 94,
+      "name": "Longines Master Collection",
+      "brand": "Longines",
+      "price": 1499.99,
+      "old_price": 1812.46,
+      "discount": 17.24,
+      "rating": 3.87,
+      "stock": 100,
+      "category": "mens-watches",
+      "description": "The Longines Master Collection is an elegant and refined watch known for its precision and craftsmanship. With a timeless design, it's a symbol of luxury and sophistication.",
+      "image": "https://cdn.dummyjson.com/product-images/mens-watches/longines-master-collection/thumbnail.webp",
+      "images": [
+        "https://cdn.dummyjson.com/product-images/mens-watches/longines-master-collection/1.webp",
+        "https://cdn.dummyjson.com/product-images/mens-watches/longines-master-collection/2.webp",
+        "https://cdn.dummyjson.com/product-images/mens-watches/longines-master-collection/3.webp"
+      ],
+      "link": "https://dummyjson.com/products/94"
+    },
+    {
+      "id": 95,
+      "name": "Rolex Cellini Date Black Dial",
+      "brand": "Rolex",
+      "price": 8999.99,
+      "old_price": 9877.07,
+      "discount": 8.88,
+      "rating": 4.97,
+      "stock": 40,
+      "category": "mens-watches",
+      "description": "The Rolex Cellini Date with Black Dial is a classic and prestigious watch. With a black dial and date complication, it exudes sophistication and is a symbol of Rolex's heritage.",
+      "image": "https://cdn.dummyjson.com/product-images/mens-watches/rolex-cellini-date-black-dial/thumbnail.webp",
+      "images": [
+        "https://cdn.dummyjson.com/product-images/mens-watches/rolex-cellini-date-black-dial/1.webp",
+        "https://cdn.dummyjson.com/product-images/mens-watches/rolex-cellini-date-black-dial/2.webp",
+        "https://cdn.dummyjson.com/product-images/mens-watches/rolex-cellini-date-black-dial/3.webp"
+      ],
+      "link": "https://dummyjson.com/products/95"
+    },
+    {
+      "id": 96,
+      "name": "Rolex Cellini Moonphase",
+      "brand": "Rolex",
+      "price": 12999.99,
+      "old_price": 15761.38,
+      "discount": 17.52,
+      "rating": 2.58,
+      "stock": 36,
+      "category": "mens-watches",
+      "description": "The Rolex Cellini Moonphase is a masterpiece of horology, featuring a moon phase complication and exquisite design. It reflects Rolex's commitment to precision and elegance.",
+      "image": "https://cdn.dummyjson.com/product-images/mens-watches/rolex-cellini-moonphase/thumbnail.webp",
+      "images": [
+        "https://cdn.dummyjson.com/product-images/mens-watches/rolex-cellini-moonphase/1.webp",
+        "https://cdn.dummyjson.com/product-images/mens-watches/rolex-cellini-moonphase/2.webp",
+        "https://cdn.dummyjson.com/product-images/mens-watches/rolex-cellini-moonphase/3.webp"
+      ],
+      "link": "https://dummyjson.com/products/96"
+    },
+    {
+      "id": 97,
+      "name": "Rolex Datejust",
+      "brand": "Rolex",
+      "price": 10999.99,
+      "old_price": 11426.19,
+      "discount": 3.73,
+      "rating": 3.66,
+      "stock": 86,
+      "category": "mens-watches",
+      "description": "The Rolex Datejust is an iconic and versatile timepiece with a date window. Known for its timeless design and reliability, it's a symbol of Rolex's watchmaking excellence.",
+      "image": "https://cdn.dummyjson.com/product-images/mens-watches/rolex-datejust/thumbnail.webp",
+      "images": [
+        "https://cdn.dummyjson.com/product-images/mens-watches/rolex-datejust/1.webp",
+        "https://cdn.dummyjson.com/product-images/mens-watches/rolex-datejust/2.webp",
+        "https://cdn.dummyjson.com/product-images/mens-watches/rolex-datejust/3.webp"
+      ],
+      "link": "https://dummyjson.com/products/97"
+    },
+    {
+      "id": 98,
+      "name": "Rolex Submariner Watch",
+      "brand": "Rolex",
+      "price": 13999.99,
+      "old_price": 14744.59,
+      "discount": 5.05,
+      "rating": 2.69,
+      "stock": 55,
+      "category": "mens-watches",
+      "description": "The Rolex Submariner is a legendary dive watch with a rich history. Known for its durability and water resistance, it's a symbol of adventure and exploration.",
+      "image": "https://cdn.dummyjson.com/product-images/mens-watches/rolex-submariner-watch/thumbnail.webp",
+      "images": [
+        "https://cdn.dummyjson.com/product-images/mens-watches/rolex-submariner-watch/1.webp",
+        "https://cdn.dummyjson.com/product-images/mens-watches/rolex-submariner-watch/2.webp",
+        "https://cdn.dummyjson.com/product-images/mens-watches/rolex-submariner-watch/3.webp"
+      ],
+      "link": "https://dummyjson.com/products/98"
+    },
+    {
+      "id": 99,
+      "name": "Amazon Echo Plus",
+      "brand": "Amazon",
+      "price": 99.99,
+      "old_price": 113.72,
+      "discount": 12.07,
+      "rating": 4.99,
+      "stock": 61,
+      "category": "mobile-accessories",
+      "description": "The Amazon Echo Plus is a smart speaker with built-in Alexa voice control. It features premium sound quality and serves as a hub for controlling smart home devices.",
+      "image": "https://cdn.dummyjson.com/product-images/mobile-accessories/amazon-echo-plus/thumbnail.webp",
+      "images": [
+        "https://cdn.dummyjson.com/product-images/mobile-accessories/amazon-echo-plus/1.webp",
+        "https://cdn.dummyjson.com/product-images/mobile-accessories/amazon-echo-plus/2.webp"
+      ],
+      "link": "https://dummyjson.com/products/99"
+    },
+    {
+      "id": 100,
+      "name": "Apple Airpods",
+      "brand": "Apple",
+      "price": 129.99,
+      "old_price": 153.91,
+      "discount": 15.54,
+      "rating": 4.15,
+      "stock": 67,
+      "category": "mobile-accessories",
+      "description": "The Apple Airpods offer a seamless wireless audio experience. With easy pairing, high-quality sound, and Siri integration, they are perfect for on-the-go listening.",
+      "image": "https://cdn.dummyjson.com/product-images/mobile-accessories/apple-airpods/thumbnail.webp",
+      "images": [
+        "https://cdn.dummyjson.com/product-images/mobile-accessories/apple-airpods/1.webp",
+        "https://cdn.dummyjson.com/product-images/mobile-accessories/apple-airpods/2.webp",
+        "https://cdn.dummyjson.com/product-images/mobile-accessories/apple-airpods/3.webp"
+      ],
+      "link": "https://dummyjson.com/products/100"
+    }
+  ]
+}
