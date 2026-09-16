@@ -1,0 +1,14 @@
+from aggregator import search_products, convert_product
+
+
+def search(query, limit=100):
+
+    products = search_products(
+        query=query,
+        limit=limit
+    )
+
+    return [
+        convert_product(product)
+        for product in products
+    ]
