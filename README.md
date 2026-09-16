@@ -1,1 +1,1 @@
-# bot.tg
+# wb_bot.py
