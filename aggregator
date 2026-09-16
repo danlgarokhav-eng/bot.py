@@ -1,14 +1,26 @@
+```python
 import requests
 import json
 import os
 import time
 
+
+# --------------------------------------------------
+# Настройки
+# --------------------------------------------------
+
 API_URL = "https://dummyjson.com/products"
+
+MINIAPP_URL = "https://miniapp-server-production.up.railway.app/update_feed"
 
 HEADERS = {
     "User-Agent": "TelegramClothingAggregator/1.0"
 }
 
+
+# --------------------------------------------------
+# Получение товаров
+# --------------------------------------------------
 
 def search_products(query="", limit=100):
     """
@@ -19,19 +31,25 @@ def search_products(query="", limit=100):
     """
 
     try:
+
         if query:
             url = "https://dummyjson.com/products/search"
+
             params = {
                 "q": query,
                 "limit": limit
             }
+
         else:
             url = API_URL
+
             params = {
                 "limit": limit
             }
 
-        print(f"DummyJSON: запрос '{query}'")
+        print(
+            f"DummyJSON: запрос '{query}'"
+        )
 
         response = requests.get(
             url,
@@ -44,50 +62,100 @@ def search_products(query="", limit=100):
 
         data = response.json()
 
-        products = data.get("products", [])
+        products = data.get(
+            "products",
+            []
+        )
 
-        print(f"DummyJSON: получено товаров: {len(products)}")
+        print(
+            f"DummyJSON: получено товаров: "
+            f"{len(products)}"
+        )
 
         return products
 
     except requests.RequestException as e:
-        print(f"Ошибка DummyJSON: {e}")
+
+        print(
+            f"Ошибка DummyJSON: {e}"
+        )
+
         return []
 
     except ValueError:
-        print("DummyJSON вернул некорректный JSON")
+
+        print(
+            "DummyJSON вернул некорректный JSON"
+        )
+
         return []
 
+
+# --------------------------------------------------
+# Приведение товара к единому формату
+# --------------------------------------------------
 
 def convert_product(product):
     """
     Приводим товар DummyJSON
-    к единому формату нашего агрегатора.
+    к единому формату агрегатора.
     """
 
-    return {
-        "id": product.get("id"),
+    price = product.get(
+        "price",
+        0
+    )
 
-        "name": product.get("title", "Без названия"),
+    discount = product.get(
+        "discountPercentage",
+        0
+    )
 
-        "brand": product.get("brand", "Без бренда"),
+    if discount:
 
-        "price": product.get("price", 0),
-
-        "old_price": round(
-            product.get("price", 0) /
-            (1 - product.get("discountPercentage", 0) / 100),
+        old_price = round(
+            price /
+            (1 - discount / 100),
             2
-        ) if product.get("discountPercentage") else product.get("price", 0),
+        )
 
-        "discount": product.get(
-            "discountPercentage",
+    else:
+
+        old_price = price
+
+    product_id = product.get(
+        "id"
+    )
+
+    return {
+
+        "id": product_id,
+
+        "name": product.get(
+            "title",
+            "Без названия"
+        ),
+
+        "brand": product.get(
+            "brand",
+            "Без бренда"
+        ),
+
+        "price": price,
+
+        "old_price": old_price,
+
+        "discount": discount,
+
+        "rating": product.get(
+            "rating",
             0
         ),
 
-        "rating": product.get("rating", 0),
-
-        "stock": product.get("stock", 0),
+        "stock": product.get(
+            "stock",
+            0
+        ),
 
         "category": product.get(
             "category",
@@ -109,9 +177,16 @@ def convert_product(product):
             []
         ),
 
-        "link": f"https://dummyjson.com/products/{product.get('id')}"
+        "link": (
+            f"https://dummyjson.com/products/"
+            f"{product_id}"
+        )
     }
 
+
+# --------------------------------------------------
+# Создание фида
+# --------------------------------------------------
 
 def build_feed(query=""):
     """
@@ -126,62 +201,178 @@ def build_feed(query=""):
     items = []
 
     for product in products:
+
         items.append(
             convert_product(product)
         )
 
     feed = {
+
         "source": "DummyJSON",
+
         "query": query,
+
         "count": len(items),
+
         "updated_at": time.strftime(
             "%Y-%m-%d %H:%M:%S"
         ),
+
         "items": items
     }
 
     return feed
 
 
-def save_feed(feed, filename="feed.json"):
+# --------------------------------------------------
+# Сохранение фида локально
+# --------------------------------------------------
+
+def save_feed(
+    feed,
+    filename="feed.json"
+):
     """
     Сохраняет фид в JSON.
     """
 
     if not feed.get("items"):
-        print("Товары отсутствуют. Старый feed.json не изменён.")
-        return False
 
-    with open(
-        filename,
-        "w",
-        encoding="utf-8"
-    ) as file:
-
-        json.dump(
-            feed,
-            file,
-            ensure_ascii=False,
-            indent=2
+        print(
+            "Товары отсутствуют. "
+            "Старый feed.json не изменён."
         )
 
-    print(
-        f"Фид сохранён: {len(feed['items'])} товаров"
+        return False
+
+    try:
+
+        with open(
+            filename,
+            "w",
+            encoding="utf-8"
+        ) as file:
+
+            json.dump(
+                feed,
+                file,
+                ensure_ascii=False,
+                indent=2
+            )
+
+        print(
+            f"Фид сохранён: "
+            f"{len(feed['items'])} товаров"
+        )
+
+        return True
+
+    except Exception as e:
+
+        print(
+            f"Ошибка сохранения feed.json: {e}"
+        )
+
+        return False
+
+
+# --------------------------------------------------
+# ОТПРАВКА ФИДА В MINI APP
+# --------------------------------------------------
+
+def send_feed_to_miniapp(feed):
+    """
+    Отправляет товары с Telegram-бота
+    на сервер Mini App.
+    """
+
+    items = feed.get(
+        "items",
+        []
     )
 
-    return True
+    if not items:
+
+        print(
+            "Mini App: нечего отправлять."
+        )
+
+        return False
+
+    try:
+
+        print(
+            "Mini App: отправляю "
+            f"{len(items)} товаров..."
+        )
+
+        response = requests.post(
+
+            MINIAPP_URL,
+
+            json=items,
+
+            headers={
+                "Content-Type":
+                "application/json"
+            },
+
+            timeout=20
+        )
+
+        response.raise_for_status()
+
+        result = response.json()
+
+        print(
+            "Mini App: фид успешно отправлен."
+        )
+
+        print(
+            f"Ответ сервера: {result}"
+        )
+
+        return True
+
+    except requests.RequestException as e:
+
+        print(
+            f"Mini App: ошибка отправки: {e}"
+        )
+
+        return False
+
+    except ValueError:
+
+        print(
+            "Mini App: сервер вернул "
+            "некорректный ответ."
+        )
+
+        return False
 
 
-def load_feed(filename="feed.json"):
+# --------------------------------------------------
+# Загрузка сохранённого фида
+# --------------------------------------------------
+
+def load_feed(
+    filename="feed.json"
+):
     """
     Загружает существующий фид.
     """
 
     if not os.path.exists(filename):
+
         return {
+
             "source": "DummyJSON",
+
             "query": "",
+
             "count": 0,
+
             "items": []
         }
 
@@ -197,11 +388,521 @@ def load_feed(filename="feed.json"):
 
     except Exception as e:
 
-        print(f"Ошибка чтения feed.json: {e}")
+        print(
+            f"Ошибка чтения feed.json: {e}"
+        )
 
         return {
+
             "source": "DummyJSON",
+
             "query": "",
+
             "count": 0,
+
             "items": []
         }
+```
+
+### 2. `bot/main.py` — замени содержимое на это
+
+```python
+import asyncio
+import os
+
+from aiogram import Bot, Dispatcher
+from aiogram.filters import Command
+from aiogram.types import (
+    Message,
+    InlineKeyboardMarkup,
+    InlineKeyboardButton,
+    CallbackQuery
+)
+
+from aggregator import (
+    build_feed,
+    save_feed,
+    load_feed,
+    send_feed_to_miniapp
+)
+
+
+# --------------------------------------------------
+# Настройки бота
+# --------------------------------------------------
+
+BOT_TOKEN = os.getenv(
+    "BOT_TOKEN",
+    ""
+).strip()
+
+
+# --------------------------------------------------
+# Администраторы
+# --------------------------------------------------
+
+ADMIN_IDS = set()
+
+admin_ids = os.getenv(
+    "ADMIN_IDS",
+    ""
+).strip()
+
+if admin_ids:
+
+    for admin_id in admin_ids.split(","):
+
+        try:
+
+            ADMIN_IDS.add(
+                int(admin_id.strip())
+            )
+
+        except ValueError:
+
+            pass
+
+
+# --------------------------------------------------
+# Telegram
+# --------------------------------------------------
+
+bot = Bot(
+    token=BOT_TOKEN
+)
+
+dp = Dispatcher()
+
+
+# --------------------------------------------------
+# /start
+# --------------------------------------------------
+
+@dp.message(Command("start"))
+async def start(message: Message):
+
+    await message.answer(
+
+        "👋 Привет!\n\n"
+
+        "Я тестовый агрегатор товаров.\n\n"
+
+        "Команды:\n"
+
+        "/search кроссовки — "
+        "поиск товаров\n"
+
+        "/feed — "
+        "показать сохранённый фид\n"
+
+        "/refresh — "
+        "обновить фид"
+    )
+
+
+# --------------------------------------------------
+# /search
+# --------------------------------------------------
+
+@dp.message(Command("search"))
+async def search_command(
+    message: Message
+):
+
+    parts = message.text.split(
+        maxsplit=1
+    )
+
+    if len(parts) < 2:
+
+        await message.answer(
+
+            "Напиши запрос.\n\n"
+
+            "Например:\n"
+
+            "/search shoes"
+        )
+
+        return
+
+    query = parts[1].strip()
+
+    await message.answer(
+        f"🔎 Ищу: {query}..."
+    )
+
+    # Получаем товары
+    feed = build_feed(query)
+
+    if not feed["items"]:
+
+        await message.answer(
+            "❌ Товары не найдены."
+        )
+
+        return
+
+    # Сохраняем локально
+    save_feed(feed)
+
+    # Отправляем в Mini App
+    send_feed_to_miniapp(feed)
+
+    # Показываем товар в Telegram
+    await show_product(
+
+        message,
+
+        feed["items"],
+
+        0
+    )
+
+
+# --------------------------------------------------
+# Показ товара
+# --------------------------------------------------
+
+async def show_product(
+    message,
+    items,
+    index
+):
+
+    if not items:
+
+        return
+
+    if index >= len(items):
+
+        index = 0
+
+    item = items[index]
+
+    text = (
+
+        f"👕 {item['name']}\n\n"
+
+        f"🏷 Бренд: "
+        f"{item['brand']}\n"
+
+        f"💰 Цена: "
+        f"{item['price']}$\n"
+
+        f"⭐ Рейтинг: "
+        f"{item['rating']}\n"
+
+        f"📦 Осталось: "
+        f"{item['stock']}\n\n"
+
+        f"{item['description']}"
+    )
+
+    keyboard = InlineKeyboardMarkup(
+
+        inline_keyboard=[
+
+            [
+
+                InlineKeyboardButton(
+
+                    text="❌ Пропустить",
+
+                    callback_data=
+                    f"next:{index}"
+                ),
+
+                InlineKeyboardButton(
+
+                    text="❤️ Нравится",
+
+                    callback_data=
+                    f"like:{index}"
+                )
+
+            ],
+
+            [
+
+                InlineKeyboardButton(
+
+                    text="🔗 Открыть товар",
+
+                    url=item["link"]
+                )
+
+            ]
+
+        ]
+    )
+
+    await message.answer_photo(
+
+        photo=item["image"],
+
+        caption=text[:1024],
+
+        reply_markup=keyboard
+    )
+
+
+# --------------------------------------------------
+# Следующий товар
+# --------------------------------------------------
+
+@dp.callback_query(
+    lambda c:
+    c.data.startswith("next:")
+)
+async def next_product(
+    callback: CallbackQuery
+):
+
+    index = int(
+
+        callback.data.split(":")[1]
+    )
+
+    feed = load_feed()
+
+    items = feed.get(
+        "items",
+        []
+    )
+
+    if not items:
+
+        await callback.answer(
+            "Фид пуст"
+        )
+
+        return
+
+    next_index = index + 1
+
+    if next_index >= len(items):
+
+        next_index = 0
+
+    await callback.message.delete()
+
+    await show_product(
+
+        callback.message,
+
+        items,
+
+        next_index
+    )
+
+    await callback.answer()
+
+
+# --------------------------------------------------
+# Лайк
+# --------------------------------------------------
+
+@dp.callback_query(
+    lambda c:
+    c.data.startswith("like:")
+)
+async def like_product(
+    callback: CallbackQuery
+):
+
+    index = int(
+
+        callback.data.split(":")[1]
+    )
+
+    feed = load_feed()
+
+    items = feed.get(
+        "items",
+        []
+    )
+
+    if not items:
+
+        await callback.answer(
+            "Фид пуст"
+        )
+
+        return
+
+    item = items[index]
+
+    await callback.answer(
+
+        f"❤️ {item['name']",
+
+        show_alert=False
+    )
+
+
+# --------------------------------------------------
+# /feed
+# --------------------------------------------------
+
+@dp.message(Command("feed"))
+async def feed_command(
+    message: Message
+):
+
+    feed = load_feed()
+
+    items = feed.get(
+        "items",
+        []
+    )
+
+    if not items:
+
+        await message.answer(
+
+            "Фид пуст.\n"
+
+            "Используй "
+            "/search shoes"
+        )
+
+        return
+
+    await show_product(
+
+        message,
+
+        items,
+
+        0
+    )
+
+
+# --------------------------------------------------
+# /refresh
+# --------------------------------------------------
+
+@dp.message(Command("refresh"))
+async def refresh_command(
+    message: Message
+):
+
+    if (
+        message.from_user.id
+        not in ADMIN_IDS
+    ):
+
+        await message.answer(
+
+            "⛔ Эта команда доступна "
+            "только администратору."
+        )
+
+        return
+
+    await message.answer(
+
+        "🔄 Обновляю каталог..."
+    )
+
+    feed = build_feed()
+
+    if not feed["items"]:
+
+        await message.answer(
+
+            "❌ Не удалось получить товары."
+        )
+
+        return
+
+    # Сохраняем
+    save_feed(feed)
+
+    # Отправляем в Mini App
+    send_feed_to_miniapp(feed)
+
+    await message.answer(
+
+        f"✅ Каталог обновлён.\n"
+
+        f"Товаров: {feed['count']}"
+    )
+
+
+# --------------------------------------------------
+# Запуск
+# --------------------------------------------------
+
+async def main():
+
+    if not BOT_TOKEN:
+
+        raise RuntimeError(
+
+            "Не задан BOT_TOKEN.\n"
+
+            "Добавь BOT_TOKEN "
+            "в переменные Railway."
+        )
+
+    print(
+        "Telegram-бот запускается..."
+    )
+
+    print(
+
+        f"Администраторов: "
+        f"{len(ADMIN_IDS)}"
+    )
+
+    await dp.start_polling(
+        bot
+    )
+
+
+# --------------------------------------------------
+# MAIN
+# --------------------------------------------------
+
+if __name__ == "__main__":
+
+    asyncio.run(
+        main()
+    )
+```
+
+**Стоп:** в коде выше я вижу опечатку в строке лайка — вот эта строка:
+
+```python
+f"❤️ {item['name']",
+```
+
+должна быть:
+
+```python
+f"❤️ {item['name']}",
+```
+
+Чтобы не было никакой путаницы, **исправь именно эту одну строку**.
+
+### После этого
+
+1. В GitHub замени код `aggregator`.
+2. Замени код файла бота.
+3. Сделай **Commit changes**.
+4. Railway автоматически увидит изменения и перезапустит бота.
+5. В Telegram напиши:
+
+```text
+/search shoes
+```
+
+6. Потом открой:
+
+[Mini App](https://miniapp-server-production.up.railway.app?utm_source=chatgpt.com)
+
+Там должны появиться товары из DummyJSON.
+
+**Если на сайте будет `Нет товаров` — ничего страшного. Тогда посмотрим логи Railway и за один шаг найдём, где связь не прошла.**
