@@ -4,6 +4,8 @@ import json
 HEADERS = {
     "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
     "Accept": "application/json",
+    "Accept-Language": "ru-RU,ru;q=0.9",
+    "Referer": "https://www.wildberries.ru/",
 }
 
 def get_wb_items(category="men_shoes", page=1, limit=100):
@@ -11,7 +13,7 @@ def get_wb_items(category="men_shoes", page=1, limit=100):
     params = {
         "appType": 1,
         "curr": "rub",
-        "dest": -1257786,
+        "dest": 12358230,      # ВАЖНО: рабочий dest
         "sort": "popular",
         "page": page,
         "limit": limit
@@ -45,7 +47,6 @@ def get_wb_items(category="men_shoes", page=1, limit=100):
 
 
 def main():
-    # Кроссовки = категория men_shoes
     items = get_wb_items("men_shoes")
 
     feed = {
