@@ -13,7 +13,7 @@ def get_wb_items(category="men_shoes", page=1, limit=100):
     params = {
         "appType": 1,
         "curr": "rub",
-        "dest": 12358230,      # ВАЖНО: рабочий dest
+        "dest": 12358230,      # рабочий dest
         "sort": "popular",
         "page": page,
         "limit": limit
