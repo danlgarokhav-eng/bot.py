@@ -1,2 +1,4 @@
-requests
 aiogram
+aiohttp
+openpyxl
+requests
