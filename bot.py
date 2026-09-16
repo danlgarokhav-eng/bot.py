@@ -1,3 +1,4 @@
+```python
 import asyncio
 import os
 
@@ -13,9 +14,14 @@ from aiogram.types import (
 from aggregator import (
     build_feed,
     save_feed,
-    load_feed
+    load_feed,
+    send_feed_to_miniapp
 )
 
+
+# =========================
+# НАСТРОЙКИ
+# =========================
 
 BOT_TOKEN = os.getenv(
     "BOT_TOKEN",
@@ -43,6 +49,10 @@ if admin_ids:
             pass
 
 
+# =========================
+# TELEGRAM
+# =========================
+
 bot = Bot(
     token=BOT_TOKEN
 )
@@ -50,16 +60,19 @@ bot = Bot(
 dp = Dispatcher()
 
 
-# -------------------------
-# Старт
-# -------------------------
+# =========================
+# START
+# =========================
 
 @dp.message(Command("start"))
-async def start(message: Message):
+async def start(
+    message: Message
+):
 
     await message.answer(
         "👋 Привет!\n\n"
         "Я тестовый агрегатор товаров.\n\n"
+
         "Команды:\n"
         "/search кроссовки — поиск товаров\n"
         "/feed — показать сохранённый фид\n"
@@ -67,9 +80,9 @@ async def start(message: Message):
     )
 
 
-# -------------------------
-# Поиск
-# -------------------------
+# =========================
+# SEARCH
+# =========================
 
 @dp.message(Command("search"))
 async def search_command(
@@ -90,15 +103,19 @@ async def search_command(
 
         return
 
-    query = parts[1]
+    query = parts[1].strip()
 
     await message.answer(
         f"🔎 Ищу: {query}..."
     )
 
-    feed = build_feed(query)
+    # Получаем товары
+    feed = build_feed(
+        query
+    )
 
-    if not feed["items"]:
+    # Проверяем результат
+    if not feed.get("items"):
 
         await message.answer(
             "❌ Товары не найдены."
@@ -106,8 +123,49 @@ async def search_command(
 
         return
 
-    save_feed(feed)
+    # Сохраняем локальный фид
+    saved = save_feed(
+        feed
+    )
 
+    if not saved:
+
+        await message.answer(
+            "⚠️ Товары найдены, "
+            "но не удалось сохранить фид."
+        )
+
+    # =========================
+    # ОТПРАВКА В MINI APP
+    # =========================
+
+    print(
+        f"Mini App: отправляю "
+        f"{feed['count']} товаров..."
+    )
+
+    miniapp_sent = send_feed_to_miniapp(
+        feed
+    )
+
+    if miniapp_sent:
+
+        await message.answer(
+            f"✅ Найдено товаров: "
+            f"{feed['count']}\n"
+            f"🌐 Фид отправлен в Mini App."
+        )
+
+    else:
+
+        await message.answer(
+            f"⚠️ Найдено товаров: "
+            f"{feed['count']}\n"
+            f"❌ Не удалось отправить "
+            f"фид в Mini App."
+        )
+
+    # Показываем первый товар
     await show_product(
         message,
         feed["items"],
@@ -115,9 +173,9 @@ async def search_command(
     )
 
 
-# -------------------------
-# Показ товара
-# -------------------------
+# =========================
+# ПОКАЗ ТОВАРА
+# =========================
 
 async def show_product(
     message,
@@ -131,24 +189,67 @@ async def show_product(
     if index >= len(items):
         index = 0
 
+    if index < 0:
+        index = 0
+
     item = items[index]
 
+    name = item.get(
+        "name",
+        "Без названия"
+    )
+
+    brand = item.get(
+        "brand",
+        "Без бренда"
+    )
+
+    price = item.get(
+        "price",
+        0
+    )
+
+    rating = item.get(
+        "rating",
+        0
+    )
+
+    stock = item.get(
+        "stock",
+        0
+    )
+
+    description = item.get(
+        "description",
+        ""
+    )
+
+    image = item.get(
+        "image",
+        ""
+    )
+
+    link = item.get(
+        "link",
+        ""
+    )
+
     text = (
-        f"👕 {item['name']}\n\n"
+        f"👕 {name}\n\n"
 
         f"🏷 Бренд: "
-        f"{item['brand']}\n"
+        f"{brand}\n"
 
         f"💰 Цена: "
-        f"{item['price']}$\n"
+        f"{price}$\n"
 
         f"⭐ Рейтинг: "
-        f"{item['rating']}\n"
+        f"{rating}\n"
 
         f"📦 Осталось: "
-        f"{item['stock']}\n\n"
+        f"{stock}\n\n"
 
-        f"{item['description']}"
+        f"{description}"
     )
 
     keyboard = InlineKeyboardMarkup(
@@ -169,26 +270,40 @@ async def show_product(
             [
                 InlineKeyboardButton(
                     text="🔗 Открыть товар",
-                    url=item["link"]
+                    url=link
                 )
             ]
 
         ]
     )
 
-    await message.answer_photo(
-        photo=item["image"],
-        caption=text[:1024],
-        reply_markup=keyboard
-    )
+    # Если изображения нет,
+    # отправляем обычное сообщение
+    if image:
+
+        await message.answer_photo(
+            photo=image,
+            caption=text[:1024],
+            reply_markup=keyboard
+        )
+
+    else:
+
+        await message.answer(
+            text[:4096],
+            reply_markup=keyboard
+        )
 
 
-# -------------------------
-# Следующий товар
-# -------------------------
+# =========================
+# СЛЕДУЮЩИЙ ТОВАР
+# =========================
 
 @dp.callback_query(
-    lambda c: c.data.startswith("next:")
+    lambda c: (
+        c.data
+        and c.data.startswith("next:")
+    )
 )
 async def next_product(
     callback: CallbackQuery
@@ -206,9 +321,11 @@ async def next_product(
     )
 
     if not items:
+
         await callback.answer(
             "Фид пуст"
         )
+
         return
 
     next_index = index + 1
@@ -216,7 +333,12 @@ async def next_product(
     if next_index >= len(items):
         next_index = 0
 
-    await callback.message.delete()
+    try:
+
+        await callback.message.delete()
+
+    except Exception:
+        pass
 
     await show_product(
         callback.message,
@@ -227,12 +349,15 @@ async def next_product(
     await callback.answer()
 
 
-# -------------------------
-# Лайк
-# -------------------------
+# =========================
+# ЛАЙК
+# =========================
 
 @dp.callback_query(
-    lambda c: c.data.startswith("like:")
+    lambda c: (
+        c.data
+        and c.data.startswith("like:")
+    )
 )
 async def like_product(
     callback: CallbackQuery
@@ -250,22 +375,37 @@ async def like_product(
     )
 
     if not items:
+
         await callback.answer(
             "Фид пуст"
         )
+
+        return
+
+    if index >= len(items):
+
+        await callback.answer(
+            "Товар не найден"
+        )
+
         return
 
     item = items[index]
 
+    name = item.get(
+        "name",
+        "Товар"
+    )
+
     await callback.answer(
-        f"❤️ {item['name']}",
+        f"❤️ {name}",
         show_alert=False
     )
 
 
-# -------------------------
-# Показ сохранённого фида
-# -------------------------
+# =========================
+# FEED
+# =========================
 
 @dp.message(Command("feed"))
 async def feed_command(
@@ -295,9 +435,9 @@ async def feed_command(
     )
 
 
-# -------------------------
-# Обновление фида
-# -------------------------
+# =========================
+# REFRESH
+# =========================
 
 @dp.message(Command("refresh"))
 async def refresh_command(
@@ -307,7 +447,8 @@ async def refresh_command(
     if message.from_user.id not in ADMIN_IDS:
 
         await message.answer(
-            "⛔ Эта команда доступна только администратору."
+            "⛔ Эта команда доступна "
+            "только администратору."
         )
 
         return
@@ -316,9 +457,10 @@ async def refresh_command(
         "🔄 Обновляю каталог..."
     )
 
+    # Получаем новый фид
     feed = build_feed()
 
-    if not feed["items"]:
+    if not feed.get("items"):
 
         await message.answer(
             "❌ Не удалось получить товары."
@@ -326,17 +468,44 @@ async def refresh_command(
 
         return
 
-    save_feed(feed)
-
-    await message.answer(
-        f"✅ Каталог обновлён.\n"
-        f"Товаров: {feed['count']}"
+    # Сохраняем
+    save_feed(
+        feed
     )
 
+    # =========================
+    # ОТПРАВКА В MINI APP
+    # =========================
 
-# -------------------------
-# Запуск
-# -------------------------
+    print(
+        f"Mini App: отправляю "
+        f"{feed['count']} товаров..."
+    )
+
+    miniapp_sent = send_feed_to_miniapp(
+        feed
+    )
+
+    if miniapp_sent:
+
+        await message.answer(
+            f"✅ Каталог обновлён.\n"
+            f"Товаров: {feed['count']}\n"
+            f"🌐 Mini App обновлён."
+        )
+
+    else:
+
+        await message.answer(
+            f"⚠️ Каталог обновлён.\n"
+            f"Товаров: {feed['count']}\n"
+            f"❌ Mini App не удалось обновить."
+        )
+
+
+# =========================
+# ЗАПУСК
+# =========================
 
 async def main():
 
@@ -344,8 +513,8 @@ async def main():
 
         raise RuntimeError(
             "Не задан BOT_TOKEN.\n"
-            "В CMD:\n"
-            "set BOT_TOKEN=ТОКЕН_БОТА"
+            "В Railway добавь переменную "
+            "BOT_TOKEN."
         )
 
     print(
@@ -362,8 +531,13 @@ async def main():
     )
 
 
+# =========================
+# MAIN
+# =========================
+
 if __name__ == "__main__":
 
     asyncio.run(
         main()
     )
+```
