@@ -1,56 +1,45 @@
-import requests
+from playwright.sync_api import sync_playwright
 import json
+import time
 
-HEADERS = {
-    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
-    "Accept": "application/json",
-    "Accept-Language": "ru-RU,ru;q=0.9",
-    "Referer": "https://www.wildberries.ru/",
-}
+def parse_wb_search(query):
+    with sync_playwright() as p:
+        browser = p.chromium.launch(headless=True)
+        page = browser.new_page()
 
-def get_wb_items(category="men_shoes", page=1, limit=100):
-    url = f"https://catalog.wb.ru/catalog/{category}/catalog"
-    params = {
-        "appType": 1,
-        "curr": "rub",
-        "dest": 12358230,      # рабочий dest
-        "sort": "popular",
-        "page": page,
-        "limit": limit
-    }
+        url = f"https://www.wildberries.ru/catalog/0/search.aspx?search={query}"
+        page.goto(url)
 
-    r = requests.get(url, params=params, headers=HEADERS)
+        time.sleep(3)  # ждём загрузку JS
 
-    try:
-        data = r.json()
-    except:
-        print("WB вернул НЕ JSON. Ответ:")
-        print(r.text[:500])
-        return []
+        products = page.query_selector_all("div.product-card")
 
-    items = []
+        items = []
 
-    for product in data.get("data", {}).get("products", []):
-        items.append({
-            "id": product.get("id"),
-            "name": product.get("name"),
-            "brand": product.get("brand"),
-            "price": product.get("salePriceU") / 100,
-            "old_price": product.get("priceU") / 100,
-            "rating": product.get("rating"),
-            "feedbacks": product.get("feedbacks"),
-            "image": f"https://images.wbstatic.net/c516x688/{product.get('id')}.jpg",
-            "link": f"https://www.wildberries.ru/catalog/{product.get('id')}/detail.aspx"
-        })
+        for product in products:
+            try:
+                name = product.query_selector("span.goods-name").inner_text()
+                price = product.query_selector("ins").inner_text()
+                link = product.query_selector("a").get_attribute("href")
 
-    return items
+                items.append({
+                    "name": name,
+                    "price": price,
+                    "link": "https://www.wildberries.ru" + link
+                })
+            except:
+                continue
+
+        browser.close()
+        return items
 
 
 def main():
-    items = get_wb_items("men_shoes")
+    query = "кроссовки"
+    items = parse_wb_search(query)
 
     feed = {
-        "query": "кроссовки",
+        "query": query,
         "count": len(items),
         "items": items
     }
