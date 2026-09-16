@@ -7,10 +7,10 @@ HEADERS = {
 }
 
 def search_wb(query, limit=100):
-    url = "https://search.wb.ru/exactmatch/ru/common/v5/search"
+    url = "https://catalog.wb.ru/catalog/search/catalog"
     params = {
-        "query": query,
-        "resultset": "goods",
+        "search": query,
+        "page": 1,
         "limit": limit
     }
 
