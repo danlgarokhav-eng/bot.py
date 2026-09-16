@@ -445,4 +445,3 @@ def load_feed(
             "items": []
 
         }
-```
