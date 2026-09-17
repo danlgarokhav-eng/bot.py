@@ -1,247 +1,524 @@
-import requests
 import json
+import os
+import requests
+
+from kufar import search_kufar
 
 
-KUFAR_API = (
-    "https://cre-api.kufar.by/"
-    "ads-search/v1/engine/v1/search/rendered-paginated"
-)
+# ============================================================
+# НАСТРОЙКИ
+# ============================================================
 
-KUFAR_IMAGE_BASE = (
-    "https://rms.kufar.by/v1/gallery/"
-)
+FEED_FILE = "feed.json"
 
-
-HEADERS = {
-    "User-Agent": (
-        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
-        "AppleWebKit/537.36 "
-        "(KHTML, like Gecko) "
-        "Chrome/131.0.0.0 Safari/537.36"
-    ),
-    "Accept": "application/json, text/plain, */*",
-    "Accept-Language": (
-        "ru-RU,ru;q=0.9,en-US;q=0.8,en;q=0.7"
-    ),
-    "Referer": "https://www.kufar.by/",
-}
+# URL твоего Mini App сервера
+MINIAPP_URL = os.getenv(
+    "MINIAPP_URL",
+    "https://miniapp-server-production.up.railway.app"
+).strip()
 
 
-# ==========================================
-# КАРТИНКА
-# ==========================================
+# Количество товаров по умолчанию
+DEFAULT_LIMIT = 50
 
-def make_image_url(path):
-
-    if not path:
-        return ""
-
-    path = str(path).strip()
-
-    if (
-        path.startswith("http://")
-        or path.startswith("https://")
-    ):
-        return path
-
-    return (
-        KUFAR_IMAGE_BASE
-        + path.lstrip("/")
-    )
+# Запрос по умолчанию для /refresh
+DEFAULT_QUERY = os.getenv(
+    "DEFAULT_QUERY",
+    "кроссовки"
+).strip()
 
 
-# ==========================================
-# ЦЕНА
-# ==========================================
+# ============================================================
+# ПОСТРОЕНИЕ FEED
+# ============================================================
 
-def extract_price(ad):
-
+def build_feed(query=None, limit=DEFAULT_LIMIT):
     """
-    Kufar отдаёт цену в копейках.
+    Собирает товары из всех подключённых источников.
 
-    Например:
-
-    3500 → 35 BYN
-    3000 → 30 BYN
-    12000 → 120 BYN
-    30000 → 300 BYN
+    Сейчас подключён только Kufar.
+    Позже сюда можно добавить:
+        - Wildberries
+        - Ozon
+        - AliExpress
+        - другие площадки
     """
 
-    price_byn = ad.get("price_byn")
+    if query is None:
+        query = DEFAULT_QUERY
 
-    if price_byn not in (
-        None,
-        ""
-    ):
+    query = str(query).strip()
+
+    if not query:
+        query = DEFAULT_QUERY
+
+    print()
+    print("=" * 60)
+    print("STYLEFLOW — BUILD FEED")
+    print("=" * 60)
+    print("Запрос:", query)
+    print("Лимит:", limit)
+
+    products = []
+
+    # ========================================================
+    # KUFAR
+    # ========================================================
+
+    try:
+        print()
+        print("Получаю товары Kufar...")
+
+        kufar_products = search_kufar(
+            query=query,
+            limit=limit
+        )
+
+        if not isinstance(kufar_products, list):
+            kufar_products = []
+
+        print(
+            f"Kufar: получено {len(kufar_products)} товаров"
+        )
+
+        products.extend(kufar_products)
+
+    except Exception as e:
+        print(
+            f"Ошибка агрегатора Kufar: {e}"
+        )
+
+    # ========================================================
+    # ЗДЕСЬ ПОЗЖЕ БУДУТ ДРУГИЕ ИСТОЧНИКИ
+    # ========================================================
+
+    # Пример:
+    #
+    # from wildberries import search_wildberries
+    #
+    # wb_products = search_wildberries(
+    #     query=query,
+    #     limit=limit
+    # )
+    #
+    # products.extend(wb_products)
+
+
+    # ========================================================
+    # ОГРАНИЧЕНИЕ КОЛИЧЕСТВА
+    # ========================================================
+
+    products = products[:limit]
+
+
+    # ========================================================
+    # ФИНАЛЬНАЯ НОРМАЛИЗАЦИЯ
+    # ========================================================
+
+    normalized_products = []
+
+    for product in products:
+
+        if not isinstance(product, dict):
+            continue
+
+        # ----------------------------------------------------
+        # Унифицированное название
+        # ----------------------------------------------------
+
+        title = (
+            product.get("title")
+            or product.get("name")
+            or "Без названия"
+        )
+
+        # ----------------------------------------------------
+        # Цена
+        # ----------------------------------------------------
+
+        price = product.get(
+            "price",
+            0
+        )
 
         try:
+            price = float(price)
 
-            price = float(
-                str(price_byn)
-                .replace(" ", "")
-                .replace(",", ".")
-            )
-
-            return round(
-                price / 100,
-                2
-            ), "BYN"
+            # Если это целое число —
+            # сохраняем красивый вид.
+            if price.is_integer():
+                price = int(price)
 
         except (
             ValueError,
             TypeError
         ):
-
-            pass
-
-
-    price = ad.get("price")
-
-    if price not in (
-        None,
-        ""
-    ):
-
-        try:
-
-            price = float(
-                str(price)
-                .replace(" ", "")
-                .replace(",", ".")
-            )
-
-            currency = (
-                ad.get("currency")
-                or "BYN"
-            )
-
-            currency = str(
-                currency
-            ).upper()
+            price = 0
 
 
-            if currency == "BYN":
+        # ----------------------------------------------------
+        # Валюта
+        # ----------------------------------------------------
 
-                price = price / 100
-
-
-            if currency == "BYR":
-
-                price = price / 10000
-
-                currency = "BYN"
-
-
-            return round(
-                price,
-                2
-            ), currency
-
-        except (
-            ValueError,
-            TypeError
-        ):
-
-            pass
-
-
-    return 0, "BYN"
-
-
-# ==========================================
-# ФОТО
-# ==========================================
-
-def extract_images(ad):
-
-    images = ad.get(
-        "images",
-        []
-    )
-
-    result = []
-
-    if not isinstance(
-        images,
-        list
-    ):
-        return result
-
-
-    for image in images:
-
-        if not isinstance(
-            image,
-            dict
-        ):
-            continue
-
-        path = image.get(
-            "path"
+        currency = (
+            product.get("currency")
+            or "BYN"
         )
 
-        if not path:
-            continue
+        currency = str(
+            currency
+        ).upper()
 
-        url = make_image_url(
-            path
+
+        # ----------------------------------------------------
+        # Ссылка
+        # ----------------------------------------------------
+
+        url = (
+            product.get("url")
+            or product.get("link")
+            or ""
         )
 
-        if (
-            url
-            and url not in result
-        ):
 
-            result.append(
-                url
+        # ----------------------------------------------------
+        # Изображение
+        # ----------------------------------------------------
+
+        image = (
+            product.get("image")
+            or ""
+        )
+
+
+        # ----------------------------------------------------
+        # Остальные поля
+        # ----------------------------------------------------
+
+        normalized_product = {
+            "id": product.get(
+                "id",
+                ""
+            ),
+
+            "source": product.get(
+                "source",
+                ""
+            ),
+
+            "external_id": product.get(
+                "external_id",
+                ""
+            ),
+
+            "title": str(
+                title
+            ).strip(),
+
+            "name": str(
+                title
+            ).strip(),
+
+            "brand": product.get(
+                "brand",
+                ""
+            ),
+
+            "category": product.get(
+                "category",
+                ""
+            ),
+
+            "price": price,
+
+            "oldPrice": product.get(
+                "oldPrice",
+                0
+            ),
+
+            "currency": currency,
+
+            "rating": product.get(
+                "rating",
+                0
+            ),
+
+            "stock": product.get(
+                "stock",
+                0
+            ),
+
+            "image": image,
+
+            "images": product.get(
+                "images",
+                []
+            ),
+
+            "url": url,
+
+            "link": url,
+
+            "description": product.get(
+                "description",
+                ""
+            ),
+
+            # raw оставляем для отладки.
+            # Потом при необходимости его можно убрать,
+            # чтобы feed.json был меньше.
+            "raw": product.get(
+                "raw",
+                {}
             )
+        }
+
+        normalized_products.append(
+            normalized_product
+        )
 
 
-    return result
+    # ========================================================
+    # СОЗДАЁМ FEED
+    # ========================================================
 
+    feed = {
+        "count": len(
+            normalized_products
+        ),
 
-# ==========================================
-# ПОЛУЧЕНИЕ ОБЪЯВЛЕНИЙ
-# ==========================================
+        "query": query,
 
-def get_kufar_ads(
-    query="",
-    limit=50
-):
-
-    params = {
-        "size": limit,
-        "sort": "lst.d",
+        "items": normalized_products
     }
 
 
-    if query:
-
-        params["query"] = query
-
-
     print()
+    print("=" * 60)
+    print("FEED ГОТОВ")
+    print("=" * 60)
     print(
-        "=" * 60
+        "Товаров:",
+        feed["count"]
     )
 
-    print(
-        "KUFAR:",
-        query
-    )
+    return feed
 
-    print(
-        "=" * 60
-    )
+
+# ============================================================
+# СОХРАНЕНИЕ FEED
+# ============================================================
+
+def save_feed(feed):
+    """
+    Сохраняет feed локально в feed.json.
+    """
+
+    try:
+
+        if not isinstance(
+            feed,
+            dict
+        ):
+            print(
+                "save_feed: feed должен быть dict"
+            )
+
+            return False
+
+
+        with open(
+            FEED_FILE,
+            "w",
+            encoding="utf-8"
+        ) as f:
+
+            json.dump(
+                feed,
+                f,
+                ensure_ascii=False,
+                indent=2
+            )
+
+
+        print(
+            f"Feed сохранён: {FEED_FILE}"
+        )
+
+        return True
+
+
+    except Exception as e:
+
+        print(
+            f"Ошибка сохранения feed: {e}"
+        )
+
+        return False
+
+
+# ============================================================
+# ЗАГРУЗКА FEED
+# ============================================================
+
+def load_feed():
+    """
+    Загружает feed из feed.json.
+    """
+
+    if not os.path.exists(
+        FEED_FILE
+    ):
+
+        print(
+            "Feed не найден."
+        )
+
+        return {
+            "count": 0,
+            "query": "",
+            "items": []
+        }
 
 
     try:
 
-        response = requests.get(
-            KUFAR_API,
-            params=params,
-            headers=HEADERS,
-            timeout=20
+        with open(
+            FEED_FILE,
+            "r",
+            encoding="utf-8"
+        ) as f:
+
+            feed = json.load(f)
+
+
+        if not isinstance(
+            feed,
+            dict
+        ):
+
+            print(
+                "Некорректный формат feed."
+            )
+
+            return {
+                "count": 0,
+                "query": "",
+                "items": []
+            }
+
+
+        if not isinstance(
+            feed.get("items"),
+            list
+        ):
+
+            feed["items"] = []
+
+
+        feed["count"] = len(
+            feed["items"]
+        )
+
+
+        return feed
+
+
+    except (
+        json.JSONDecodeError,
+        OSError
+    ) as e:
+
+        print(
+            f"Ошибка загрузки feed: {e}"
+        )
+
+        return {
+            "count": 0,
+            "query": "",
+            "items": []
+        }
+
+
+# ============================================================
+# ОТПРАВКА FEED В MINI APP
+# ============================================================
+
+def send_feed_to_miniapp(feed):
+    """
+    Отправляет товары в miniapp-server.
+
+    miniapp-server ожидает:
+        POST /update_feed
+
+    Body:
+        [
+            {...},
+            {...}
+        ]
+
+    То есть отправляем НЕ весь объект feed,
+    а только feed["items"].
+    """
+
+    try:
+
+        if not isinstance(
+            feed,
+            dict
+        ):
+
+            print(
+                "send_feed_to_miniapp: "
+                "feed должен быть dict"
+            )
+
+            return False
+
+
+        items = feed.get(
+            "items",
+            []
+        )
+
+
+        if not isinstance(
+            items,
+            list
+        ):
+
+            print(
+                "send_feed_to_miniapp: "
+                "items должен быть list"
+            )
+
+            return False
+
+
+        url = (
+            MINIAPP_URL.rstrip("/")
+            + "/update_feed"
+        )
+
+
+        print()
+        print("=" * 60)
+        print("ОТПРАВКА В MINI APP")
+        print("=" * 60)
+        print(
+            "URL:",
+            url
+        )
+        print(
+            "Товаров:",
+            len(items)
+        )
+
+
+        response = requests.post(
+            url,
+            json=items,
+            timeout=30
         )
 
 
@@ -254,287 +531,147 @@ def get_kufar_ads(
         if response.status_code != 200:
 
             print(
+                "Ошибка Mini App:"
+            )
+
+            print(
                 response.text[:2000]
             )
 
-            return {
-                "ads": [],
-                "total": 0,
-                "cursor": None
-            }
+            return False
 
 
-        data = response.json()
+        try:
 
+            result = response.json()
 
-        ads = data.get(
-            "ads",
-            []
-        )
+        except ValueError:
+
+            result = {}
 
 
         print(
-            "Получено:",
-            len(ads)
+            "Ответ Mini App:",
+            result
         )
 
-        print(
-            "Всего:",
-            data.get(
-                "total",
-                "?"
+
+        if result.get("status") == "ok":
+
+            print(
+                "Feed успешно отправлен."
             )
+
+            return True
+
+
+        print(
+            "Mini App вернул неожиданный ответ."
         )
 
-
-        return {
-            "ads": ads,
-
-            "total": data.get(
-                "total",
-                0
-            ),
-
-            "cursor": None,
-
-            "raw": data
-        }
+        return False
 
 
     except requests.RequestException as e:
 
         print(
-            "Ошибка Kufar:",
+            "Ошибка подключения к Mini App:",
             e
         )
 
-        return {
-            "ads": [],
-            "total": 0,
-            "cursor": None
-        }
+        return False
 
 
-    except ValueError:
+    except Exception as e:
 
         print(
-            "Kufar вернул "
-            "некорректный JSON"
+            "Ошибка send_feed_to_miniapp:",
+            e
         )
 
-        return {
-            "ads": [],
-            "total": 0,
-            "cursor": None
-        }
+        return False
 
 
-# ==========================================
-# KUFAR → STYLEFLOW
-# ==========================================
-
-def convert_kufar_ad(ad):
-
-    ad_id = ad.get(
-        "ad_id"
-    )
-
-
-    title = (
-        ad.get("subject")
-        or ad.get("title")
-        or "Объявление Kufar"
-    )
-
-
-    link = ad.get(
-        "ad_link"
-    )
-
-
-    if (
-        not link
-        and ad_id
-    ):
-
-        link = (
-            "https://www.kufar.by/item/"
-            f"{ad_id}"
-        )
-
-
-    price, currency = extract_price(
-        ad
-    )
-
-
-    images = extract_images(
-        ad
-    )
-
-
-    category = (
-        ad.get("category")
-        or ""
-    )
-
-
-    return {
-
-        "id": f"kufar_{ad_id}",
-
-        "source": "kufar",
-
-        "external_id": str(
-            ad_id
-        ),
-
-        "title": str(
-            title
-        ).strip(),
-
-        "brand": "",
-
-        "category": str(
-            category
-        ),
-
-        "price": price,
-
-        "oldPrice": 0,
-
-        "currency": currency,
-
-        "rating": 0,
-
-        "image": (
-            images[0]
-            if images
-            else ""
-        ),
-
-        "images": images,
-
-        "url": link,
-
-        "raw": ad
-    }
-
-
-# ==========================================
-# ПОИСК
-# ==========================================
-
-def search_kufar(
-    query="",
-    limit=50
-):
-
-    result = get_kufar_ads(
-        query=query,
-        limit=limit
-    )
-
-
-    products = []
-
-
-    for ad in result.get(
-        "ads",
-        []
-    ):
-
-        try:
-
-            product = convert_kufar_ad(
-                ad
-            )
-
-            # Без картинки не берём
-            if not product.get(
-                "image"
-            ):
-                continue
-
-
-            products.append(
-                product
-            )
-
-
-        except Exception as e:
-
-            print(
-                "Ошибка обработки:",
-                e
-            )
-
-
-    return products
-
-
-# ==========================================
-# ТЕСТ
-# ==========================================
+# ============================================================
+# ТЕСТ АГРЕГАТОРА
+# ============================================================
 
 if __name__ == "__main__":
 
     print()
-    print(
-        "=" * 60
-    )
+    print("=" * 60)
+    print("STYLEFLOW — ТЕСТ AGGREGATOR")
+    print("=" * 60)
 
-    print(
-        "STYLEFLOW — ТЕСТ KUFAR"
-    )
-
-    print(
-        "=" * 60
-    )
-
-
-    products = search_kufar(
+    feed = build_feed(
         query="кроссовки",
         limit=10
     )
 
+    print()
+    print(
+        "Получено:",
+        feed["count"]
+    )
+
+    if feed["items"]:
+
+        print()
+        print("Первые товары:")
+
+        for index, item in enumerate(
+            feed["items"],
+            start=1
+        ):
+
+            print()
+            print(
+                f"#{index}"
+            )
+
+            print(
+                "Название:",
+                item.get("title")
+            )
+
+            print(
+                "Цена:",
+                item.get("price"),
+                item.get("currency")
+            )
+
+            print(
+                "Источник:",
+                item.get("source")
+            )
+
+            print(
+                "URL:",
+                item.get("url")
+            )
+
+
+    # Сохраняем локально
+    saved = save_feed(
+        feed
+    )
 
     print()
     print(
-        "Получено товаров:",
-        len(products)
+        "Сохранение:",
+        saved
     )
 
 
-    for index, product in enumerate(
-        products,
-        start=1
-    ):
+    # Отправляем в Mini App
+    if feed["items"]:
+
+        sent = send_feed_to_miniapp(
+            feed
+        )
 
         print()
         print(
-            f"ТОВАР #{index}"
-        )
-
-        print(
-            "Название:",
-            product["title"]
-        )
-
-        print(
-            "Цена:",
-            product["price"],
-            product["currency"]
-        )
-
-        print(
-            "Фото:",
-            len(
-                product["images"]
-            )
-        )
-
-        print(
-            "Ссылка:",
-            product["url"]
+            "Отправка в Mini App:",
+            sent
         )
