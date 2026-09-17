@@ -1,5 +1,5 @@
 import requests
-import json
+import re
 
 KUFAR_API = (
     "https://cre-api.kufar.by/"
@@ -30,30 +30,57 @@ response = requests.get(
     timeout=20
 )
 
-print("HTTP:", response.status_code)
+print("API HTTP:", response.status_code)
 
 data = response.json()
 ad = data["ads"][0]
 
-print()
-print("НАЗВАНИЕ:")
-print(ad.get("subject"))
+ad_id = ad["ad_id"]
+ad_url = ad["ad_link"]
 
 print()
-print("ФОТО:")
+print("ОБЪЯВЛЕНИЕ:")
+print(ad["subject"])
+print(ad_url)
+
+print()
+print("PATH ИЗ API:")
+for image in ad.get("images", []):
+    print(image.get("path"))
+
+print()
+print("=" * 60)
+print("ПРОВЕРЯЕМ СТРАНИЦУ KUFAR")
 print("=" * 60)
 
-for index, image in enumerate(ad.get("images", []), start=1):
+page = requests.get(
+    ad_url,
+    headers=HEADERS,
+    timeout=20
+)
 
-    path = image.get("path")
-    storage = image.get("media_storage")
+print("PAGE HTTP:", page.status_code)
+print("Размер страницы:", len(page.text))
 
+print()
+print("ИЩЕМ JPG/WEBP URL:")
+
+urls = re.findall(
+    r'https?://[^"\'\s<>]+?\.(?:jpg|jpeg|webp|png)',
+    page.text,
+    re.IGNORECASE
+)
+
+unique = []
+
+for url in urls:
+    if url not in unique:
+        unique.append(url)
+
+for index, url in enumerate(unique[:20], start=1):
     print()
-    print(f"Фото #{index}")
-    print("storage:", storage)
-    print("path:", path)
+    print(f"IMAGE #{index}:")
+    print(url)
 
 print()
-print("=" * 60)
-print("ПЕРВЫЙ PATH:")
-print(ad["images"][0]["path"])
+print("Всего найдено:", len(unique))
