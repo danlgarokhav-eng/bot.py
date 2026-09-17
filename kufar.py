@@ -1,4 +1,3 @@
-```python
 import requests
 import json
 import time
@@ -652,4 +651,3 @@ if __name__ == "__main__":
     print(
         "Тест завершён."
     )
-```
