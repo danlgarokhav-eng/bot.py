@@ -1,3 +1,4 @@
+```python
 import json
 import os
 import requests
@@ -11,17 +12,13 @@ from kufar import search_kufar
 
 FEED_FILE = "feed.json"
 
-# URL твоего Mini App сервера
 MINIAPP_URL = os.getenv(
     "MINIAPP_URL",
     "https://miniapp-server-production.up.railway.app"
 ).strip()
 
-
-# Количество товаров по умолчанию
 DEFAULT_LIMIT = 50
 
-# Запрос по умолчанию для /refresh
 DEFAULT_QUERY = os.getenv(
     "DEFAULT_QUERY",
     "кроссовки"
@@ -29,20 +26,10 @@ DEFAULT_QUERY = os.getenv(
 
 
 # ============================================================
-# ПОСТРОЕНИЕ FEED
+# BUILD FEED
 # ============================================================
 
 def build_feed(query=None, limit=DEFAULT_LIMIT):
-    """
-    Собирает товары из всех подключённых источников.
-
-    Сейчас подключён только Kufar.
-    Позже сюда можно добавить:
-        - Wildberries
-        - Ozon
-        - AliExpress
-        - другие площадки
-    """
 
     if query is None:
         query = DEFAULT_QUERY
@@ -56,6 +43,7 @@ def build_feed(query=None, limit=DEFAULT_LIMIT):
     print("=" * 60)
     print("STYLEFLOW — BUILD FEED")
     print("=" * 60)
+
     print("Запрос:", query)
     print("Лимит:", limit)
 
@@ -66,6 +54,7 @@ def build_feed(query=None, limit=DEFAULT_LIMIT):
     # ========================================================
 
     try:
+
         print()
         print("Получаю товары Kufar...")
 
@@ -78,41 +67,62 @@ def build_feed(query=None, limit=DEFAULT_LIMIT):
             kufar_products = []
 
         print(
-            f"Kufar: получено {len(kufar_products)} товаров"
+            "Kufar получено:",
+            len(kufar_products)
         )
 
         products.extend(kufar_products)
 
+        # ====================================================
+        # ПРОВЕРКА ПОСЛЕ KUFAR
+        # ====================================================
+
+        print()
+        print("=" * 60)
+        print("ПРОВЕРКА ПОСЛЕ KUFAR")
+        print("=" * 60)
+
+        for item in products[:10]:
+
+            print(
+                "TITLE:",
+                item.get("title")
+            )
+
+            print(
+                "PRICE:",
+                item.get("price")
+            )
+
+            print(
+                "CURRENCY:",
+                item.get("currency")
+            )
+
+            print(
+                "SOURCE:",
+                item.get("source")
+            )
+
+            print("-" * 40)
+
     except Exception as e:
+
         print(
-            f"Ошибка агрегатора Kufar: {e}"
+            "Ошибка Kufar:",
+            e
         )
 
-    # ========================================================
-    # ЗДЕСЬ ПОЗЖЕ БУДУТ ДРУГИЕ ИСТОЧНИКИ
-    # ========================================================
-
-    # Пример:
-    #
-    # from wildberries import search_wildberries
-    #
-    # wb_products = search_wildberries(
-    #     query=query,
-    #     limit=limit
-    # )
-    #
-    # products.extend(wb_products)
-
 
     # ========================================================
-    # ОГРАНИЧЕНИЕ КОЛИЧЕСТВА
+    # ОГРАНИЧЕНИЕ
     # ========================================================
 
     products = products[:limit]
 
 
     # ========================================================
-    # ФИНАЛЬНАЯ НОРМАЛИЗАЦИЯ
+    # НОРМАЛИЗАЦИЯ
     # ========================================================
 
     normalized_products = []
@@ -122,8 +132,9 @@ def build_feed(query=None, limit=DEFAULT_LIMIT):
         if not isinstance(product, dict):
             continue
 
+
         # ----------------------------------------------------
-        # Унифицированное название
+        # TITLE
         # ----------------------------------------------------
 
         title = (
@@ -132,8 +143,9 @@ def build_feed(query=None, limit=DEFAULT_LIMIT):
             or "Без названия"
         )
 
+
         # ----------------------------------------------------
-        # Цена
+        # PRICE
         # ----------------------------------------------------
 
         price = product.get(
@@ -142,10 +154,9 @@ def build_feed(query=None, limit=DEFAULT_LIMIT):
         )
 
         try:
+
             price = float(price)
 
-            # Если это целое число —
-            # сохраняем красивый вид.
             if price.is_integer():
                 price = int(price)
 
@@ -153,16 +164,17 @@ def build_feed(query=None, limit=DEFAULT_LIMIT):
             ValueError,
             TypeError
         ):
+
             price = 0
 
 
         # ----------------------------------------------------
-        # Валюта
+        # CURRENCY
         # ----------------------------------------------------
 
-        currency = (
-            product.get("currency")
-            or "BYN"
+        currency = product.get(
+            "currency",
+            "BYN"
         )
 
         currency = str(
@@ -171,7 +183,7 @@ def build_feed(query=None, limit=DEFAULT_LIMIT):
 
 
         # ----------------------------------------------------
-        # Ссылка
+        # URL
         # ----------------------------------------------------
 
         url = (
@@ -182,20 +194,21 @@ def build_feed(query=None, limit=DEFAULT_LIMIT):
 
 
         # ----------------------------------------------------
-        # Изображение
+        # IMAGE
         # ----------------------------------------------------
 
-        image = (
-            product.get("image")
-            or ""
+        image = product.get(
+            "image",
+            ""
         )
 
 
         # ----------------------------------------------------
-        # Остальные поля
+        # PRODUCT
         # ----------------------------------------------------
 
         normalized_product = {
+
             "id": product.get(
                 "id",
                 ""
@@ -264,14 +277,12 @@ def build_feed(query=None, limit=DEFAULT_LIMIT):
                 ""
             ),
 
-            # raw оставляем для отладки.
-            # Потом при необходимости его можно убрать,
-            # чтобы feed.json был меньше.
             "raw": product.get(
                 "raw",
                 {}
             )
         }
+
 
         normalized_products.append(
             normalized_product
@@ -279,7 +290,36 @@ def build_feed(query=None, limit=DEFAULT_LIMIT):
 
 
     # ========================================================
-    # СОЗДАЁМ FEED
+    # ПРОВЕРКА ПОСЛЕ НОРМАЛИЗАЦИИ
+    # ========================================================
+
+    print()
+    print("=" * 60)
+    print("ПРОВЕРКА ПОСЛЕ НОРМАЛИЗАЦИИ")
+    print("=" * 60)
+
+    for item in normalized_products[:10]:
+
+        print(
+            "TITLE:",
+            item.get("title")
+        )
+
+        print(
+            "PRICE:",
+            item.get("price")
+        )
+
+        print(
+            "CURRENCY:",
+            item.get("currency")
+        )
+
+        print("-" * 40)
+
+
+    # ========================================================
+    # FEED
     # ========================================================
 
     feed = {
@@ -295,10 +335,11 @@ def build_feed(query=None, limit=DEFAULT_LIMIT):
 
     print()
     print("=" * 60)
-    print("FEED ГОТОВ")
+    print("FEED СОЗДАН")
     print("=" * 60)
+
     print(
-        "Товаров:",
+        "Количество:",
         feed["count"]
     )
 
@@ -306,13 +347,10 @@ def build_feed(query=None, limit=DEFAULT_LIMIT):
 
 
 # ============================================================
-# СОХРАНЕНИЕ FEED
+# SAVE FEED
 # ============================================================
 
 def save_feed(feed):
-    """
-    Сохраняет feed локально в feed.json.
-    """
 
     try:
 
@@ -320,8 +358,9 @@ def save_feed(feed):
             feed,
             dict
         ):
+
             print(
-                "save_feed: feed должен быть dict"
+                "save_feed: неправильный формат"
             )
 
             return False
@@ -342,7 +381,8 @@ def save_feed(feed):
 
 
         print(
-            f"Feed сохранён: {FEED_FILE}"
+            "Feed сохранён:",
+            FEED_FILE
         )
 
         return True
@@ -351,27 +391,25 @@ def save_feed(feed):
     except Exception as e:
 
         print(
-            f"Ошибка сохранения feed: {e}"
+            "Ошибка сохранения:",
+            e
         )
 
         return False
 
 
 # ============================================================
-# ЗАГРУЗКА FEED
+# LOAD FEED
 # ============================================================
 
 def load_feed():
-    """
-    Загружает feed из feed.json.
-    """
 
     if not os.path.exists(
         FEED_FILE
     ):
 
         print(
-            "Feed не найден."
+            "feed.json не найден"
         )
 
         return {
@@ -397,10 +435,6 @@ def load_feed():
             dict
         ):
 
-            print(
-                "Некорректный формат feed."
-            )
-
             return {
                 "count": 0,
                 "query": "",
@@ -424,13 +458,11 @@ def load_feed():
         return feed
 
 
-    except (
-        json.JSONDecodeError,
-        OSError
-    ) as e:
+    except Exception as e:
 
         print(
-            f"Ошибка загрузки feed: {e}"
+            "Ошибка загрузки feed:",
+            e
         )
 
         return {
@@ -441,25 +473,10 @@ def load_feed():
 
 
 # ============================================================
-# ОТПРАВКА FEED В MINI APP
+# SEND TO MINI APP
 # ============================================================
 
 def send_feed_to_miniapp(feed):
-    """
-    Отправляет товары в miniapp-server.
-
-    miniapp-server ожидает:
-        POST /update_feed
-
-    Body:
-        [
-            {...},
-            {...}
-        ]
-
-    То есть отправляем НЕ весь объект feed,
-    а только feed["items"].
-    """
 
     try:
 
@@ -495,6 +512,44 @@ def send_feed_to_miniapp(feed):
             return False
 
 
+        # ====================================================
+        # ПРОВЕРКА ПРЯМО ПЕРЕД ОТПРАВКОЙ
+        # ====================================================
+
+        print()
+        print("=" * 60)
+        print("ПРЯМО ПЕРЕД ОТПРАВКОЙ В MINI APP")
+        print("=" * 60)
+
+        for item in items[:10]:
+
+            print(
+                "TITLE:",
+                item.get("title")
+            )
+
+            print(
+                "PRICE:",
+                item.get("price")
+            )
+
+            print(
+                "CURRENCY:",
+                item.get("currency")
+            )
+
+            print(
+                "SOURCE:",
+                item.get("source")
+            )
+
+            print("-" * 40)
+
+
+        # ====================================================
+        # URL
+        # ====================================================
+
         url = (
             MINIAPP_URL.rstrip("/")
             + "/update_feed"
@@ -502,18 +557,20 @@ def send_feed_to_miniapp(feed):
 
 
         print()
-        print("=" * 60)
-        print("ОТПРАВКА В MINI APP")
-        print("=" * 60)
         print(
-            "URL:",
+            "POST:",
             url
         )
+
         print(
             "Товаров:",
             len(items)
         )
 
+
+        # ====================================================
+        # ОТПРАВКА
+        # ====================================================
 
         response = requests.post(
             url,
@@ -528,14 +585,16 @@ def send_feed_to_miniapp(feed):
         )
 
 
+        print(
+            "Ответ сервера:",
+            response.text[:2000]
+        )
+
+
         if response.status_code != 200:
 
             print(
-                "Ошибка Mini App:"
-            )
-
-            print(
-                response.text[:2000]
+                "ОШИБКА MINI APP"
             )
 
             return False
@@ -550,16 +609,10 @@ def send_feed_to_miniapp(feed):
             result = {}
 
 
-        print(
-            "Ответ Mini App:",
-            result
-        )
-
-
         if result.get("status") == "ok":
 
             print(
-                "Feed успешно отправлен."
+                "Feed успешно отправлен в Mini App."
             )
 
             return True
@@ -593,7 +646,7 @@ def send_feed_to_miniapp(feed):
 
 
 # ============================================================
-# ТЕСТ АГРЕГАТОРА
+# TEST
 # ============================================================
 
 if __name__ == "__main__":
@@ -603,75 +656,36 @@ if __name__ == "__main__":
     print("STYLEFLOW — ТЕСТ AGGREGATOR")
     print("=" * 60)
 
+
     feed = build_feed(
         query="кроссовки",
         limit=10
     )
 
+
     print()
     print(
-        "Получено:",
+        "ИТОГО:",
         feed["count"]
     )
 
-    if feed["items"]:
 
-        print()
-        print("Первые товары:")
+    # --------------------------------------------------------
+    # SAVE
+    # --------------------------------------------------------
 
-        for index, item in enumerate(
-            feed["items"],
-            start=1
-        ):
-
-            print()
-            print(
-                f"#{index}"
-            )
-
-            print(
-                "Название:",
-                item.get("title")
-            )
-
-            print(
-                "Цена:",
-                item.get("price"),
-                item.get("currency")
-            )
-
-            print(
-                "Источник:",
-                item.get("source")
-            )
-
-            print(
-                "URL:",
-                item.get("url")
-            )
-
-
-    # Сохраняем локально
-    saved = save_feed(
+    save_feed(
         feed
     )
 
-    print()
-    print(
-        "Сохранение:",
-        saved
-    )
 
+    # --------------------------------------------------------
+    # SEND
+    # --------------------------------------------------------
 
-    # Отправляем в Mini App
     if feed["items"]:
 
-        sent = send_feed_to_miniapp(
+        send_feed_to_miniapp(
             feed
         )
-
-        print()
-        print(
-            "Отправка в Mini App:",
-            sent
-        )
+```
