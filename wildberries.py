@@ -1,342 +1,216 @@
-import asyncio
-import json
-
-from playwright.async_api import async_playwright
+import os
+import requests
 
 
-SEARCH_URL = (
-    "https://search.wb.ru/exactmatch/ru/common/v18/search"
-)
+# ============================================================
+# REEFAPI — WILDBERRIES
+# ============================================================
+
+REEF_API_KEY = os.getenv("REEF_API_KEY", "").strip()
+
+REEF_URL = "https://api.reefapi.com/wildberries/v1/search"
 
 
-async def search_wildberries(query="кроссовки", limit=10):
-    print()
-    print("=" * 60)
-    print("STYLEFLOW — WILDBERRIES JS FETCH")
-    print("=" * 60)
-    print(f"Запрос: {query}")
-    print(f"Лимит: {limit}")
-    print()
+def search_wildberries(
+    query="кроссовки",
+    country="by",
+    page=1,
+    limit=10,
+):
+    """
+    Поиск товаров Wildberries через ReefAPI.
 
-    async with async_playwright() as p:
+    query   — поисковый запрос
+    country — страна:
+              ru = Россия
+              by = Беларусь
+              kz = Казахстан
+              и т.д.
+    page    — страница 1-3
+    limit   — сколько товаров вернуть из ответа
+    """
 
-        browser = await p.chromium.launch(
-            headless=True,
-            args=[
-                "--no-sandbox",
-                "--disable-setuid-sandbox",
-                "--disable-dev-shm-usage",
-            ],
+    if not REEF_API_KEY:
+        print("❌ Не найден REEF_API_KEY")
+        print("Добавь переменную окружения REEF_API_KEY")
+        return []
+
+    headers = {
+        "x-api-key": REEF_API_KEY,
+        "Content-Type": "application/json",
+        "Accept": "application/json",
+    }
+
+    payload = {
+        "query": query,
+        "country": country,
+        "page": page,
+    }
+
+    try:
+        print("=" * 60)
+        print("STYLEFLOW — REEFAPI / WILDBERRIES")
+        print("=" * 60)
+
+        print(f"🔎 Поиск: {query}")
+        print(f"🌍 Страна: {country}")
+        print(f"📄 Страница: {page}")
+        print()
+
+        response = requests.post(
+            REEF_URL,
+            headers=headers,
+            json=payload,
+            timeout=60,
         )
 
-        context = await browser.new_context(
-            viewport={
-                "width": 1366,
-                "height": 900,
-            },
-            locale="ru-RU",
-            user_agent=(
-                "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
-                "AppleWebKit/537.36 (KHTML, like Gecko) "
-                "Chrome/151.0.0.0 Safari/537.36"
-            ),
-        )
+        print(f"HTTP: {response.status_code}")
 
-        page = await context.new_page()
-
-        try:
-            print("Открываю Wildberries...")
-
-            response = await page.goto(
-                "https://www.wildberries.ru/",
-                wait_until="domcontentloaded",
-                timeout=60000,
-            )
-
-            if response:
-                print(f"Главная страница HTTP: {response.status}")
-
-            await page.wait_for_timeout(3000)
-
-            print("Выполняю fetch внутри Chromium...")
-
-            result = await page.evaluate(
-                """
-                async ({ searchUrl, query }) => {
-
-                    const params = new URLSearchParams({
-                        query: query,
-                        resultset: "catalog",
-                        dest: "-1257786",
-                        curr: "rub",
-                        spp: "30",
-                        appType: "1",
-                        lang: "ru",
-                        page: "1",
-                        sort: "popular"
-                    });
-
-                    const url = searchUrl + "?" + params.toString();
-
-                    try {
-
-                        const response = await fetch(
-                            url,
-                            {
-                                method: "GET",
-                                credentials: "include",
-                                headers: {
-                                    "Accept": "*/*"
-                                }
-                            }
-                        );
-
-                        const text = await response.text();
-
-                        return {
-                            status: response.status,
-                            url: url,
-                            text: text
-                        };
-
-                    } catch (error) {
-
-                        return {
-                            status: 0,
-                            url: url,
-                            error: String(error)
-                        };
-                    }
-                }
-                """,
-                {
-                    "searchUrl": SEARCH_URL,
-                    "query": query,
-                },
-            )
-
-            print(f"Fetch HTTP: {result.get('status')}")
-            print(f"Fetch URL: {result.get('url')}")
-
-            if result.get("error"):
-                print(f"❌ Ошибка fetch: {result['error']}")
-                await browser.close()
-                return []
-
-            text = result.get("text", "")
-
-            print(f"Получено символов: {len(text)}")
-
-            if not text:
-                print("❌ Wildberries вернул пустой ответ.")
-                await browser.close()
-                return []
-
-            # Сохраняем ответ для диагностики.
-            with open(
-                "wb_response.txt",
-                "w",
-                encoding="utf-8",
-            ) as f:
-                f.write(text)
-
-            print("Ответ сохранён в wb_response.txt")
-
-            if result["status"] != 200:
-                print()
-                print("❌ WB не вернул HTTP 200.")
-                print("Первые 500 символов ответа:")
-                print(text[:500])
-
-                await browser.close()
-                return []
-
-            try:
-                data = json.loads(text)
-
-            except json.JSONDecodeError as e:
-                print(f"❌ Ответ не является JSON: {e}")
-                print(text[:500])
-
-                await browser.close()
-                return []
-
-            products = data.get("products", [])
-
-            if not isinstance(products, list):
-
-                # На случай другой структуры ответа.
-                nested_data = data.get("data", {})
-
-                if isinstance(nested_data, dict):
-                    products = nested_data.get(
-                        "products",
-                        [],
-                    )
-
-            print(f"Товаров получено: {len(products)}")
-
-            result_products = []
-
-            for product in products[:limit]:
-
-                nm_id = product.get("id")
-
-                name = (
-                    product.get("name")
-                    or product.get("title")
-                    or "Товар Wildberries"
-                )
-
-                brand = product.get(
-                    "brand",
-                    "",
-                )
-
-                sale_price = product.get(
-                    "salePriceU"
-                )
-
-                price_u = product.get(
-                    "priceU"
-                )
-
-                if sale_price is not None:
-                    try:
-                        price = float(sale_price) / 100
-                    except (TypeError, ValueError):
-                        price = 0
-                elif price_u is not None:
-                    try:
-                        price = float(price_u) / 100
-                    except (TypeError, ValueError):
-                        price = 0
-                else:
-                    price = 0
-
-                if price_u is not None:
-                    try:
-                        old_price = float(price_u) / 100
-                    except (TypeError, ValueError):
-                        old_price = 0
-                else:
-                    old_price = 0
-
-                rating = product.get(
-                    "reviewRating"
-                )
-
-                reviews = product.get(
-                    "feedbacks",
-                    0,
-                )
-
-                url = ""
-
-                if nm_id:
-                    url = (
-                        "https://www.wildberries.ru/catalog/"
-                        f"{nm_id}/detail.aspx"
-                    )
-
-                normalized = {
-                    "id": f"wb_{nm_id}",
-                    "source": "wildberries",
-                    "external_id": str(nm_id),
-
-                    "title": name,
-                    "name": name,
-
-                    "brand": brand,
-                    "category": "",
-
-                    "price": price,
-                    "oldPrice": old_price,
-                    "currency": "RUB",
-
-                    "rating": rating,
-                    "stock": None,
-                    "reviews": reviews,
-
-                    "image": "",
-                    "images": [],
-
-                    "url": url,
-                    "link": url,
-
-                    "description": "",
-
-                    "raw": product,
-                }
-
-                result_products.append(
-                    normalized
-                )
-
-            print()
-            print("=" * 60)
-            print("ТОВАРЫ")
-            print("=" * 60)
-
-            for i, product in enumerate(
-                result_products,
-                1,
-            ):
-                print()
-                print(f"#{i}")
-                print(
-                    f"ID:       "
-                    f"{product['external_id']}"
-                )
-                print(
-                    f"Название: "
-                    f"{product['title']}"
-                )
-                print(
-                    f"Бренд:    "
-                    f"{product['brand']}"
-                )
-                print(
-                    f"Цена:     "
-                    f"{product['price']} "
-                    f"{product['currency']}"
-                )
-                print(
-                    f"Старая:   "
-                    f"{product['oldPrice']} "
-                    f"{product['currency']}"
-                )
-                print(
-                    f"Рейтинг:  "
-                    f"{product['rating']}"
-                )
-                print(
-                    f"Отзывы:   "
-                    f"{product['reviews']}"
-                )
-                print(
-                    f"Ссылка:   "
-                    f"{product['url']}"
-                )
-
-            await browser.close()
-
-            return result_products
-
-        except Exception as e:
-
-            print()
-            print(f"❌ Общая ошибка: {e}")
-
-            await browser.close()
-
+        if response.status_code != 200:
+            print("❌ Ошибка ReefAPI:")
+            print(response.text[:3000])
             return []
 
+        data = response.json()
+
+        # ----------------------------------------------------
+        # Проверяем ответ ReefAPI
+        # ----------------------------------------------------
+
+        if not data.get("ok"):
+            print("❌ ReefAPI вернул ошибку:")
+            print(data.get("error"))
+            return []
+
+        api_data = data.get("data", {})
+
+        results = api_data.get("results", [])
+
+        print(f"✅ Получено товаров: {len(results)}")
+        print()
+
+        # ----------------------------------------------------
+        # Показываем товары
+        # ----------------------------------------------------
+
+        products = []
+
+        for item in results[:limit]:
+
+            product_id = item.get("product_id")
+
+            title = item.get("title", "")
+            brand = item.get("brand", "")
+
+            seller = item.get("seller") or {}
+
+            seller_name = seller.get("name", "")
+            seller_rating = seller.get("rating")
+
+            price = item.get("price")
+            old_price = item.get("was_price")
+
+            currency = item.get("currency", "BYN")
+
+            rating = item.get("rating")
+            reviews = item.get("review_count")
+
+            image = item.get("image")
+            url = item.get("url")
+
+            stock = item.get("stock_quantity")
+
+            product = {
+                "id": str(product_id) if product_id else "",
+                "source": "wildberries",
+                "external_id": str(product_id) if product_id else "",
+
+                "title": title,
+                "name": title,
+
+                "brand": brand,
+                "category": "",
+
+                "price": price,
+                "oldPrice": old_price,
+                "currency": currency,
+
+                "rating": rating,
+                "reviews": reviews,
+                "stock": stock,
+
+                "image": image,
+                "images": [image] if image else [],
+
+                "url": url,
+                "link": url,
+
+                "description": "",
+
+                "seller": seller_name,
+                "seller_rating": seller_rating,
+
+                "raw": item,
+            }
+
+            products.append(product)
+
+            # ------------------------------------------------
+            # Вывод в консоль
+            # ------------------------------------------------
+
+            print("-" * 60)
+            print(f"ID:       {product_id}")
+            print(f"Название: {title}")
+            print(f"Бренд:    {brand}")
+            print(f"Продавец: {seller_name}")
+
+            print(
+                f"Цена:     {price} {currency}"
+            )
+
+            if old_price:
+                print(
+                    f"Старая:   {old_price} {currency}"
+                )
+
+            print(f"Рейтинг:  {rating}")
+            print(f"Отзывы:   {reviews}")
+            print(f"Фото:     {image}")
+            print(f"Ссылка:   {url}")
+
+        print()
+        print("=" * 60)
+        print("ТЕСТ ЗАВЕРШЁН")
+        print("=" * 60)
+
+        return products
+
+    except requests.exceptions.Timeout:
+        print("❌ ReefAPI не ответил за 60 секунд")
+        return []
+
+    except requests.exceptions.RequestException as e:
+        print(f"❌ Ошибка соединения: {e}")
+        return []
+
+    except Exception as e:
+        print(f"❌ Неожиданная ошибка: {e}")
+        return []
+
+
+# ============================================================
+# ТЕСТ
+# ============================================================
 
 if __name__ == "__main__":
-    asyncio.run(
-        search_wildberries(
-            query="кроссовки",
-            limit=10,
-        )
+
+    products = search_wildberries(
+        query="кроссовки",
+        country="by",
+        page=1,
+        limit=10,
     )
+
+    print()
+    print(f"ИТОГО ТОВАРОВ: {len(products)}")
