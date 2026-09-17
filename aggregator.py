@@ -1,4 +1,3 @@
-```python
 import json
 import os
 import requests
@@ -688,4 +687,3 @@ if __name__ == "__main__":
         send_feed_to_miniapp(
             feed
         )
-```
