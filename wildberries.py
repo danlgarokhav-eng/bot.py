@@ -1,285 +1,174 @@
-import requests
+import asyncio
+from playwright.async_api import async_playwright
 
 
-WB_SEARCH_URL = (
-    "https://search.wb.ru/exactmatch/ru/common/v4/search"
-)
-
-HEADERS = {
-    "User-Agent": (
-        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
-        "AppleWebKit/537.36 (KHTML, like Gecko) "
-        "Chrome/151.0.0.0 Safari/537.36"
-    ),
-    "Accept": "application/json, text/plain, */*",
-    "Accept-Language": "ru-RU,ru;q=0.9",
-}
+WB_URL = "https://www.wildberries.ru/catalog/0/search.aspx"
 
 
-def get_wb_image(nm_id):
-    """
-    Строит URL основной картинки Wildberries.
-
-    nm_id — артикул товара WB.
-    """
-
-    try:
-        nm_id = int(nm_id)
-    except (TypeError, ValueError):
-        return ""
-
-    vol = nm_id // 100000
-    part = nm_id // 1000
-
-    # Основной вариант CDN.
-    # Для части старых/новых карточек конкретный basket
-    # может отличаться, поэтому при необходимости позже
-    # сделаем более надёжное определение CDN.
-    basket = (vol // 100) + 1
-
-    return (
-        f"https://basket-{basket:02d}.wbbasket.ru/"
-        f"vol{vol}/part{part}/{nm_id}/images/big/1.webp"
-    )
-
-
-def extract_price(product):
-    """
-    Получает цену товара.
-
-    Wildberries обычно отдаёт:
-    salePriceU = цена в копейках.
-
-    Например:
-    350000 -> 3500 RUB
-    """
-
-    sale_price = product.get("salePriceU")
-
-    if sale_price is not None:
-        try:
-            return float(sale_price) / 100
-        except (TypeError, ValueError):
-            pass
-
-    # Запасной вариант
-    price_u = product.get("priceU")
-
-    if price_u is not None:
-        try:
-            return float(price_u) / 100
-        except (TypeError, ValueError):
-            pass
-
-    return 0.0
-
-
-def extract_old_price(product):
-    """
-    Получает старую цену, если она есть.
-    """
-
-    price_u = product.get("priceU")
-
-    if price_u is None:
-        return 0.0
-
-    try:
-        return float(price_u) / 100
-    except (TypeError, ValueError):
-        return 0.0
-
-
-def convert_wb_product(product):
-    """
-    Приводит карточку Wildberries
-    к единому формату StyleFlow.
-    """
-
-    nm_id = product.get("id")
-
-    title = (
-        product.get("name")
-        or product.get("title")
-        or "Товар Wildberries"
-    )
-
-    brand = product.get("brand", "")
-
-    price = extract_price(product)
-    old_price = extract_old_price(product)
-
-    rating = product.get("reviewRating")
-
-    try:
-        rating = float(rating) if rating is not None else None
-    except (TypeError, ValueError):
-        rating = None
-
-    reviews = product.get("feedbacks", 0)
-
-    try:
-        reviews = int(reviews)
-    except (TypeError, ValueError):
-        reviews = 0
-
-    image = get_wb_image(nm_id)
-
-    url = ""
-
-    if nm_id:
-        url = (
-            f"https://www.wildberries.ru/catalog/"
-            f"{nm_id}/detail.aspx"
-        )
-
-    return {
-        "id": f"wb_{nm_id}",
-        "source": "wildberries",
-        "external_id": str(nm_id) if nm_id else "",
-
-        "title": title,
-        "name": title,
-
-        "brand": brand,
-        "category": "",
-
-        "price": price,
-        "oldPrice": old_price,
-        "currency": "RUB",
-
-        "rating": rating,
-        "stock": None,
-        "reviews": reviews,
-
-        "image": image,
-        "images": [image] if image else [],
-
-        "url": url,
-        "link": url,
-
-        "description": "",
-
-        # Оставляем исходную карточку.
-        "raw": product,
-    }
-
-
-def search_wildberries(query, limit=50, page=1):
-    """
-    Ищет товары на Wildberries.
-
-    query:
-        Например "кроссовки"
-
-    limit:
-        Сколько товаров вернуть.
-
-    page:
-        Страница WB.
-    """
-
-    params = {
-        "query": query,
-        "resultset": "catalog",
-
-        # Беларусь/Россия и другие направления
-        # позже можно вынести в настройки.
-        "dest": "-1257786",
-
-        "curr": "rub",
-        "spp": "30",
-        "appType": "1",
-        "lang": "ru",
-
-        "page": page,
-    }
-
+async def search_wildberries(query="кроссовки", limit=10):
     print()
     print("=" * 60)
-    print("WILDBERRIES — ПОИСК")
+    print("STYLEFLOW — WILDBERRIES PLAYWRIGHT")
     print("=" * 60)
     print(f"Запрос: {query}")
-    print(f"Страница: {page}")
     print(f"Лимит: {limit}")
     print()
 
-    try:
-        response = requests.get(
-            WB_SEARCH_URL,
-            params=params,
-            headers=HEADERS,
-            timeout=20,
+    async with async_playwright() as p:
+
+        browser = await p.chromium.launch(
+            headless=True,
+            args=[
+                "--no-sandbox",
+                "--disable-setuid-sandbox",
+                "--disable-dev-shm-usage",
+            ],
         )
 
-        print(f"HTTP: {response.status_code}")
+        page = await browser.new_page(
+            viewport={
+                "width": 1366,
+                "height": 900,
+            },
+            user_agent=(
+                "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+                "AppleWebKit/537.36 (KHTML, like Gecko) "
+                "Chrome/151.0.0.0 Safari/537.36"
+            ),
+            locale="ru-RU",
+        )
 
-        response.raise_for_status()
+        url = f"{WB_URL}?search={query}"
 
-        data = response.json()
-
-    except requests.RequestException as e:
-        print(f"❌ Ошибка запроса WB: {e}")
-        return []
-
-    except ValueError as e:
-        print(f"❌ WB вернул не JSON: {e}")
-        print(response.text[:500])
-        return []
-
-    products = data.get("products", [])
-
-    if not isinstance(products, list):
-        print("❌ Поле products имеет неправильный формат.")
-        return []
-
-    print(f"Найдено WB: {len(products)}")
-
-    result = []
-
-    for product in products[:limit]:
+        print("Открываю Wildberries...")
+        print(url)
+        print()
 
         try:
-            normalized = convert_wb_product(product)
-            result.append(normalized)
-
-        except Exception as e:
-            print(
-                f"⚠️ Ошибка обработки товара "
-                f"{product.get('id')}: {e}"
+            response = await page.goto(
+                url,
+                wait_until="domcontentloaded",
+                timeout=60000,
             )
 
-    print(f"Обработано: {len(result)}")
+            if response:
+                print(f"HTTP: {response.status}")
 
-    return result
+            await page.wait_for_timeout(5000)
+
+            print(f"Заголовок: {await page.title()}")
+            print(f"URL после загрузки: {page.url}")
+
+            # Сохраняем HTML для диагностики.
+            html = await page.content()
+
+            with open(
+                "wb_debug.html",
+                "w",
+                encoding="utf-8",
+            ) as f:
+                f.write(html)
+
+            print("HTML сохранён в wb_debug.html")
+
+            # Ищем карточки товаров.
+            cards = await page.locator(
+                "article.product-card"
+            ).all()
+
+            print(f"Карточек найдено: {len(cards)}")
+
+            products = []
+
+            for card in cards[:limit]:
+
+                try:
+                    name_element = card.locator(
+                        ".product-card__name"
+                    )
+
+                    price_element = card.locator(
+                        ".price__lower-price"
+                    )
+
+                    link_element = card.locator(
+                        "a.product-card__link"
+                    )
+
+                    name = ""
+
+                    if await name_element.count():
+                        name = (
+                            await name_element.first.text_content()
+                            or ""
+                        )
+
+                    price = ""
+
+                    if await price_element.count():
+                        price = (
+                            await price_element.first.text_content()
+                            or ""
+                        )
+
+                    link = ""
+
+                    if await link_element.count():
+                        link = (
+                            await link_element.first.get_attribute(
+                                "href"
+                            )
+                            or ""
+                        )
+
+                    products.append(
+                        {
+                            "name": name.strip(),
+                            "price": price.strip(),
+                            "url": link,
+                        }
+                    )
+
+                except Exception as e:
+                    print(
+                        f"⚠️ Ошибка обработки карточки: {e}"
+                    )
+
+            print()
+            print("=" * 60)
+            print("ТОВАРЫ")
+            print("=" * 60)
+
+            for i, product in enumerate(products, 1):
+                print()
+                print(f"#{i}")
+                print(f"Название: {product['name']}")
+                print(f"Цена:     {product['price']}")
+                print(f"Ссылка:   {product['url']}")
+
+            await browser.close()
+
+            return products
+
+        except Exception as e:
+
+            print()
+            print(f"❌ Ошибка Playwright: {e}")
+
+            await page.screenshot(
+                path="wb_error.png",
+                full_page=True,
+            )
+
+            await browser.close()
+
+            return []
 
 
 if __name__ == "__main__":
-
-    print("=" * 60)
-    print("STYLEFLOW — ТЕСТ WILDBERRIES")
-    print("=" * 60)
-
-    products = search_wildberries(
-        query="кроссовки",
-        limit=10,
+    asyncio.run(
+        search_wildberries(
+            query="кроссовки",
+            limit=10,
+        )
     )
-
-    print()
-    print("=" * 60)
-    print("РЕЗУЛЬТАТ")
-    print("=" * 60)
-
-    for index, product in enumerate(products, start=1):
-
-        print()
-        print(f"#{index}")
-        print(f"ID:       {product['external_id']}")
-        print(f"Название: {product['title']}")
-        print(f"Бренд:    {product['brand']}")
-        print(f"Цена:     {product['price']} {product['currency']}")
-        print(f"Старая:   {product['oldPrice']} {product['currency']}")
-        print(f"Рейтинг:  {product['rating']}")
-        print(f"Отзывы:   {product['reviews']}")
-        print(f"Фото:     {product['image']}")
-        print(f"Ссылка:   {product['url']}")
