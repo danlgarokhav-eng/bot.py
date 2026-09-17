@@ -1,4 +1,5 @@
 import os
+import random
 import requests
 
 
@@ -8,15 +9,18 @@ REEF_API_KEY = os.getenv("REEF_API_KEY", "").strip()
 
 
 def search_wildberries(
-    query="кроссовки",
+    query="товары",
     country="by",
     page=1,
-    limit=50,
+    limit=100,
 ):
     """
-    Поиск товаров Wildberries через ReefAPI.
+    Получение товаров Wildberries через ReefAPI.
 
-    Возвращает товары в едином формате StyleFlow.
+    Для StyleFlow используем широкий запрос и
+    перемешиваем полученные товары.
+
+    1 успешный search = 1 кредит ReefAPI.
     """
 
     if not REEF_API_KEY:
@@ -28,12 +32,13 @@ def search_wildberries(
         "Content-Type": "application/json",
     }
 
+    # Максимально простой запрос.
+    # Не добавляем sort и max_rotations,
+    # чтобы сначала проверить базовый endpoint.
     payload = {
         "query": query,
         "country": country,
         "page": page,
-        "sort": "popular",
-        "max_rotations": 12,
     }
 
     print("=" * 60)
@@ -42,7 +47,7 @@ def search_wildberries(
     print(f"🔎 Запрос: {query}")
     print(f"🌍 Страна: {country}")
     print(f"📄 Страница: {page}")
-    print("🔄 Максимум попыток ReefAPI: 12")
+    print(f"📦 Лимит: {limit}")
     print("📡 Отправляем запрос...")
 
     try:
@@ -76,7 +81,12 @@ def search_wildberries(
         print(response.text[:3000])
         return []
 
+    # --------------------------------------------------
+    # ПРОВЕРКА ОШИБКИ REEFAPI
+    # --------------------------------------------------
+
     if not data.get("ok"):
+
         error = data.get("error", {})
 
         print("❌ ReefAPI сообщил об ошибке:")
@@ -88,6 +98,10 @@ def search_wildberries(
             print(f"Повторить позже: {error.get('retryable')}")
 
         return []
+
+    # --------------------------------------------------
+    # ПОЛУЧАЕМ RESULTS
+    # --------------------------------------------------
 
     api_data = data.get("data", {})
 
@@ -101,7 +115,11 @@ def search_wildberries(
         print("❌ Некорректное поле results")
         return []
 
-    print(f"✅ Получено от Wildberries: {len(results)} товаров")
+    print(f"✅ ReefAPI получил: {len(results)} товаров")
+
+    # --------------------------------------------------
+    # ПРЕОБРАЗУЕМ В ФОРМАТ STYLEFLOW
+    # --------------------------------------------------
 
     products = []
 
@@ -130,9 +148,9 @@ def search_wildberries(
             images.append(image)
 
         product = {
-            # ==========================================
-            # ОСНОВНЫЕ ПОЛЯ STYLEFLOW
-            # ==========================================
+            # ------------------------------------------
+            # STYLEFLOW
+            # ------------------------------------------
 
             "id": f"wb_{product_id}",
 
@@ -140,17 +158,17 @@ def search_wildberries(
 
             "external_id": str(product_id),
 
-            # ==========================================
+            # ------------------------------------------
             # НАЗВАНИЕ
-            # ==========================================
+            # ------------------------------------------
 
             "title": title,
 
             "name": title,
 
-            # ==========================================
-            # ТОВАР
-            # ==========================================
+            # ------------------------------------------
+            # БРЕНД
+            # ------------------------------------------
 
             "brand": item.get("brand") or "",
 
@@ -158,9 +176,9 @@ def search_wildberries(
 
             "category_id": item.get("category_id"),
 
-            # ==========================================
+            # ------------------------------------------
             # ЦЕНА
-            # ==========================================
+            # ------------------------------------------
 
             "price": item.get("price"),
 
@@ -168,47 +186,47 @@ def search_wildberries(
 
             "currency": item.get("currency") or "BYN",
 
-            # ==========================================
+            # ------------------------------------------
             # РЕЙТИНГ
-            # ==========================================
+            # ------------------------------------------
 
             "rating": item.get("rating"),
 
             "reviews": item.get("review_count", 0),
 
-            # ==========================================
+            # ------------------------------------------
             # НАЛИЧИЕ
-            # ==========================================
+            # ------------------------------------------
 
             "stock": item.get("stock_quantity", 0),
 
             "available": item.get("available", False),
 
-            # ==========================================
+            # ------------------------------------------
             # ФОТО
-            # ==========================================
+            # ------------------------------------------
 
             "image": image,
 
             "images": images,
 
-            # ==========================================
+            # ------------------------------------------
             # ССЫЛКА
-            # ==========================================
+            # ------------------------------------------
 
             "url": item.get("url") or "",
 
             "link": item.get("url") or "",
 
-            # ==========================================
+            # ------------------------------------------
             # ОПИСАНИЕ
-            # ==========================================
+            # ------------------------------------------
 
             "description": "",
 
-            # ==========================================
+            # ------------------------------------------
             # ПРОДАВЕЦ
-            # ==========================================
+            # ------------------------------------------
 
             "seller": seller.get("name") or "",
 
@@ -216,21 +234,25 @@ def search_wildberries(
 
             "seller_id": seller.get("id"),
 
-            # ==========================================
+            # ------------------------------------------
             # СКИДКА
-            # ==========================================
+            # ------------------------------------------
 
-            "discount_percent": item.get("discount_percent"),
+            "discount_percent": item.get(
+                "discount_percent"
+            ),
 
-            # ==========================================
+            # ------------------------------------------
             # ДОСТАВКА
-            # ==========================================
+            # ------------------------------------------
 
-            "delivery_hours": item.get("delivery_hours"),
+            "delivery_hours": item.get(
+                "delivery_hours"
+            ),
 
-            # ==========================================
+            # ------------------------------------------
             # ЛОГИСТИКА
-            # ==========================================
+            # ------------------------------------------
 
             "price_before_logistics": item.get(
                 "price_before_logistics"
@@ -240,50 +262,75 @@ def search_wildberries(
                 "logistics_fee"
             ),
 
-            # ==========================================
+            # ------------------------------------------
             # РАЗМЕРЫ / ЦВЕТА
-            # ==========================================
+            # ------------------------------------------
 
-            "size_count": item.get("size_count", 0),
+            "size_count": item.get(
+                "size_count",
+                0,
+            ),
 
-            "colours": item.get("colours", []),
+            "colours": item.get(
+                "colours",
+                [],
+            ),
 
-            # ==========================================
+            # ------------------------------------------
             # ДОПОЛНИТЕЛЬНЫЕ ДАННЫЕ
-            # ==========================================
+            # ------------------------------------------
 
             "root_id": item.get("root_id"),
 
-            "image_count": item.get("image_count", 0),
+            "image_count": item.get(
+                "image_count",
+                0,
+            ),
 
-            "is_new": item.get("is_new", False),
+            "is_new": item.get(
+                "is_new",
+                False,
+            ),
 
-            "price_source": item.get("price_source"),
+            "price_source": item.get(
+                "price_source"
+            ),
 
-            # ==========================================
-            # RAW — ОРИГИНАЛЬНЫЙ ОБЪЕКТ REEFAPI
-            # ==========================================
+            # ------------------------------------------
+            # ОРИГИНАЛ REEFAPI
+            # ------------------------------------------
 
             "raw": item,
         }
 
         products.append(product)
 
-    print(f"📦 Подготовлено для StyleFlow: {len(products)} товаров")
+    # --------------------------------------------------
+    # ПЕРЕМЕШИВАЕМ ТОВАРЫ
+    # --------------------------------------------------
+
+    random.shuffle(products)
+
+    print(
+        f"🔀 Товары перемешаны: "
+        f"{len(products)}"
+    )
+
+    print(
+        f"📦 Подготовлено для StyleFlow: "
+        f"{len(products)}"
+    )
 
     return products
 
 
 def test_wildberries():
-    """
-    Тест Wildberries через ReefAPI.
-    """
 
     products = search_wildberries(
-        query="кроссовки",
+        query="товары",
         country="by",
         page=1,
-        limit=10,
+        limit=100,
     )
 
     print()
@@ -297,17 +344,28 @@ def test_wildberries():
         print("=" * 60)
         return
 
-    for index, product in enumerate(products, start=1):
+    print(
+        f"✅ Всего товаров: "
+        f"{len(products)}"
+    )
 
-        print()
-        print(f"ТОВАР #{index}")
-        print("-" * 60)
+    print()
 
-        print(f"ID: {product['external_id']}")
+    for index, product in enumerate(
+        products[:20],
+        start=1
+    ):
 
-        print(f"Название: {product['title']}")
+        print(f"#{index}")
+        print(
+            f"Название: "
+            f"{product['title']}"
+        )
 
-        print(f"Бренд: {product['brand']}")
+        print(
+            f"Бренд: "
+            f"{product['brand']}"
+        )
 
         print(
             f"Цена: "
@@ -336,32 +394,12 @@ def test_wildberries():
         )
 
         print(
-            f"Остаток: "
-            f"{product['stock']}"
-        )
-
-        print(
-            f"В наличии: "
-            f"{product['available']}"
-        )
-
-        print(
             f"Продавец: "
             f"{product['seller']}"
         )
 
         print(
-            f"Рейтинг продавца: "
-            f"{product['seller_rating']}"
-        )
-
-        print(
-            f"Доставка: "
-            f"{product['delivery_hours']} ч."
-        )
-
-        print(
-            f"Изображение: "
+            f"Фото: "
             f"{product['image']}"
         )
 
@@ -369,6 +407,8 @@ def test_wildberries():
             f"Ссылка: "
             f"{product['url']}"
         )
+
+        print("-" * 60)
 
     print()
 
