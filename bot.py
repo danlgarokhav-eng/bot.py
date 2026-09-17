@@ -208,6 +208,11 @@ async def show_product(
         0
     )
 
+    currency = item.get(
+        "currency",
+        "BYN"
+    )
+
     rating = item.get(
         "rating",
         0
@@ -240,7 +245,7 @@ async def show_product(
         f"{brand}\n"
 
         f"💰 Цена: "
-        f"{price}$\n"
+        f"{price} {currency}\n"
 
         f"⭐ Рейтинг: "
         f"{rating}\n"
@@ -503,6 +508,101 @@ async def refresh_command(
 
 
 # =========================
+# АВТОМАТИЧЕСКОЕ ОБНОВЛЕНИЕ
+# =========================
+
+async def auto_update_feed():
+
+    # Ждём 1 час после запуска бота
+    await asyncio.sleep(3600)
+
+    while True:
+
+        try:
+
+            print(
+                "========================================"
+            )
+
+            print(
+                "🔄 АВТОМАТИЧЕСКОЕ ОБНОВЛЕНИЕ КАТАЛОГА"
+            )
+
+            print(
+                "========================================"
+            )
+
+            # Получаем полностью новый фид
+            feed = build_feed()
+
+            if not feed.get("items"):
+
+                print(
+                    "❌ Автообновление: "
+                    "товары не найдены."
+                )
+
+            else:
+
+                # Полностью заменяем старый фид
+                saved = save_feed(
+                    feed
+                )
+
+                if saved:
+
+                    print(
+                        f"✅ Новый фид сохранён: "
+                        f"{feed['count']} товаров"
+                    )
+
+                else:
+
+                    print(
+                        "⚠️ Не удалось сохранить "
+                        "новый фид."
+                    )
+
+                # Отправляем новый список в Mini App
+                print(
+                    f"🌐 Отправляю в Mini App: "
+                    f"{feed['count']} товаров..."
+                )
+
+                miniapp_sent = send_feed_to_miniapp(
+                    feed
+                )
+
+                if miniapp_sent:
+
+                    print(
+                        "✅ Mini App успешно обновлён."
+                    )
+
+                else:
+
+                    print(
+                        "❌ Не удалось обновить "
+                        "Mini App."
+                    )
+
+            print(
+                "⏰ Следующее обновление "
+                "через 1 час."
+            )
+
+        except Exception as e:
+
+            print(
+                f"❌ Ошибка автоматического "
+                f"обновления: {e}"
+            )
+
+        # Ждём ещё один час
+        await asyncio.sleep(3600)
+
+
+# =========================
 # ЗАПУСК
 # =========================
 
@@ -523,6 +623,20 @@ async def main():
     print(
         f"Администраторов: "
         f"{len(ADMIN_IDS)}"
+    )
+
+    # Запускаем автоматическое обновление
+    asyncio.create_task(
+        auto_update_feed()
+    )
+
+    print(
+        "⏰ Автообновление каталога включено."
+    )
+
+    print(
+        "⏰ Первое автоматическое обновление "
+        "через 1 час."
     )
 
     await dp.start_polling(
