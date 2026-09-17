@@ -16,7 +16,7 @@ def search_wildberries(
     """
     Поиск товаров Wildberries через ReefAPI.
 
-    Возвращает список товаров в едином формате StyleFlow.
+    Возвращает товары в едином формате StyleFlow.
     """
 
     if not REEF_API_KEY:
@@ -33,6 +33,7 @@ def search_wildberries(
         "country": country,
         "page": page,
         "sort": "popular",
+        "max_rotations": 12,
     }
 
     print("=" * 60)
@@ -41,6 +42,7 @@ def search_wildberries(
     print(f"🔎 Запрос: {query}")
     print(f"🌍 Страна: {country}")
     print(f"📄 Страница: {page}")
+    print("🔄 Максимум попыток ReefAPI: 12")
     print("📡 Отправляем запрос...")
 
     try:
@@ -62,26 +64,41 @@ def search_wildberries(
     print(f"HTTP: {response.status_code}")
 
     if response.status_code != 200:
-        print("❌ ReefAPI вернул ошибку:")
+        print("❌ ReefAPI вернул HTTP-ошибку:")
         print(response.text[:3000])
         return []
 
     try:
         data = response.json()
+
     except ValueError:
-        print("❌ ReefAPI вернул не JSON")
+        print("❌ ReefAPI вернул некорректный JSON")
         print(response.text[:3000])
         return []
 
     if not data.get("ok"):
+        error = data.get("error", {})
+
         print("❌ ReefAPI сообщил об ошибке:")
-        print(data.get("error", data))
+        print(error)
+
+        if isinstance(error, dict):
+            print(f"Код: {error.get('code')}")
+            print(f"Сообщение: {error.get('message')}")
+            print(f"Повторить позже: {error.get('retryable')}")
+
         return []
 
-    results = data.get("data", {}).get("results", [])
+    api_data = data.get("data", {})
+
+    if not isinstance(api_data, dict):
+        print("❌ Некорректное поле data")
+        return []
+
+    results = api_data.get("results", [])
 
     if not isinstance(results, list):
-        print("❌ Некорректный формат results")
+        print("❌ Некорректное поле results")
         return []
 
     print(f"✅ Получено от Wildberries: {len(results)} товаров")
@@ -89,6 +106,9 @@ def search_wildberries(
     products = []
 
     for item in results[:limit]:
+
+        if not isinstance(item, dict):
+            continue
 
         product_id = item.get("product_id")
 
@@ -110,51 +130,107 @@ def search_wildberries(
             images.append(image)
 
         product = {
-            # Основные поля StyleFlow
+            # ==========================================
+            # ОСНОВНЫЕ ПОЛЯ STYLEFLOW
+            # ==========================================
+
             "id": f"wb_{product_id}",
+
             "source": "wildberries",
+
             "external_id": str(product_id),
 
-            # Название
+            # ==========================================
+            # НАЗВАНИЕ
+            # ==========================================
+
             "title": title,
+
             "name": title,
 
-            # Информация о товаре
+            # ==========================================
+            # ТОВАР
+            # ==========================================
+
             "brand": item.get("brand") or "",
+
             "category": "",
+
             "category_id": item.get("category_id"),
 
-            # Цена
+            # ==========================================
+            # ЦЕНА
+            # ==========================================
+
             "price": item.get("price"),
+
             "oldPrice": item.get("was_price"),
+
             "currency": item.get("currency") or "BYN",
 
-            # Рейтинг
+            # ==========================================
+            # РЕЙТИНГ
+            # ==========================================
+
             "rating": item.get("rating"),
+
             "reviews": item.get("review_count", 0),
 
-            # Остаток
+            # ==========================================
+            # НАЛИЧИЕ
+            # ==========================================
+
             "stock": item.get("stock_quantity", 0),
+
             "available": item.get("available", False),
 
-            # Изображения
+            # ==========================================
+            # ФОТО
+            # ==========================================
+
             "image": image,
+
             "images": images,
 
-            # Ссылка
+            # ==========================================
+            # ССЫЛКА
+            # ==========================================
+
             "url": item.get("url") or "",
+
             "link": item.get("url") or "",
 
-            # Описание
+            # ==========================================
+            # ОПИСАНИЕ
+            # ==========================================
+
             "description": "",
 
-            # Дополнительная информация
+            # ==========================================
+            # ПРОДАВЕЦ
+            # ==========================================
+
             "seller": seller.get("name") or "",
+
             "seller_rating": seller.get("rating"),
+
+            "seller_id": seller.get("id"),
+
+            # ==========================================
+            # СКИДКА
+            # ==========================================
 
             "discount_percent": item.get("discount_percent"),
 
+            # ==========================================
+            # ДОСТАВКА
+            # ==========================================
+
             "delivery_hours": item.get("delivery_hours"),
+
+            # ==========================================
+            # ЛОГИСТИКА
+            # ==========================================
 
             "price_before_logistics": item.get(
                 "price_before_logistics"
@@ -164,11 +240,30 @@ def search_wildberries(
                 "logistics_fee"
             ),
 
+            # ==========================================
+            # РАЗМЕРЫ / ЦВЕТА
+            # ==========================================
+
             "size_count": item.get("size_count", 0),
 
             "colours": item.get("colours", []),
 
-            # Служебное
+            # ==========================================
+            # ДОПОЛНИТЕЛЬНЫЕ ДАННЫЕ
+            # ==========================================
+
+            "root_id": item.get("root_id"),
+
+            "image_count": item.get("image_count", 0),
+
+            "is_new": item.get("is_new", False),
+
+            "price_source": item.get("price_source"),
+
+            # ==========================================
+            # RAW — ОРИГИНАЛЬНЫЙ ОБЪЕКТ REEFAPI
+            # ==========================================
+
             "raw": item,
         }
 
@@ -181,7 +276,7 @@ def search_wildberries(
 
 def test_wildberries():
     """
-    Локальный тест Wildberries.
+    Тест Wildberries через ReefAPI.
     """
 
     products = search_wildberries(
@@ -192,59 +287,91 @@ def test_wildberries():
     )
 
     print()
+
     print("=" * 60)
     print("РЕЗУЛЬТАТ ТЕСТА")
     print("=" * 60)
 
     if not products:
         print("❌ Товары не получены")
+        print("=" * 60)
         return
 
     for index, product in enumerate(products, start=1):
 
         print()
-        print(f"#{index}")
+        print(f"ТОВАР #{index}")
+        print("-" * 60)
+
         print(f"ID: {product['external_id']}")
+
         print(f"Название: {product['title']}")
+
         print(f"Бренд: {product['brand']}")
+
         print(
-            f"Цена: {product['price']} "
+            f"Цена: "
+            f"{product['price']} "
             f"{product['currency']}"
         )
+
         print(
             f"Старая цена: "
             f"{product['oldPrice']}"
         )
+
         print(
             f"Скидка: "
             f"{product['discount_percent']}%"
         )
+
         print(
             f"Рейтинг: "
             f"{product['rating']}"
         )
+
         print(
             f"Отзывы: "
             f"{product['reviews']}"
         )
+
         print(
             f"Остаток: "
             f"{product['stock']}"
         )
+
+        print(
+            f"В наличии: "
+            f"{product['available']}"
+        )
+
         print(
             f"Продавец: "
             f"{product['seller']}"
         )
+
+        print(
+            f"Рейтинг продавца: "
+            f"{product['seller_rating']}"
+        )
+
+        print(
+            f"Доставка: "
+            f"{product['delivery_hours']} ч."
+        )
+
         print(
             f"Изображение: "
             f"{product['image']}"
         )
+
         print(
             f"Ссылка: "
             f"{product['url']}"
         )
 
     print()
+
     print("=" * 60)
     print("✅ ТЕСТ ЗАВЕРШЁН")
     print("=" * 60)
