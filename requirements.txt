@@ -2,3 +2,4 @@ aiogram
 aiohttp
 openpyxl
 requests
+playwright
