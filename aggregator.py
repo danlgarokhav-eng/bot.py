@@ -48,6 +48,7 @@ def build_feed(query=None, limit=DEFAULT_LIMIT):
 
     products = []
 
+
     # ========================================================
     # KUFAR
     # ========================================================
@@ -55,14 +56,19 @@ def build_feed(query=None, limit=DEFAULT_LIMIT):
     try:
 
         print()
-        print("Получаю товары Kufar...")
+        print("=" * 60)
+        print("ИСТОЧНИК: KUFAR")
+        print("=" * 60)
 
         kufar_products = search_kufar(
             query=query,
             limit=limit
         )
 
-        if not isinstance(kufar_products, list):
+        if not isinstance(
+            kufar_products,
+            list
+        ):
             kufar_products = []
 
         print(
@@ -70,54 +76,64 @@ def build_feed(query=None, limit=DEFAULT_LIMIT):
             len(kufar_products)
         )
 
-        products.extend(kufar_products)
-
-        # ====================================================
-        # ПРОВЕРКА ПОСЛЕ KUFAR
-        # ====================================================
-
-        print()
-        print("=" * 60)
-        print("ПРОВЕРКА ПОСЛЕ KUFAR")
-        print("=" * 60)
-
-        for item in products[:10]:
-
-            print(
-                "TITLE:",
-                item.get("title")
-            )
-
-            print(
-                "PRICE:",
-                item.get("price")
-            )
-
-            print(
-                "CURRENCY:",
-                item.get("currency")
-            )
-
-            print(
-                "SOURCE:",
-                item.get("source")
-            )
-
-            print("-" * 40)
+        products.extend(
+            kufar_products
+        )
 
     except Exception as e:
 
         print(
-            "Ошибка Kufar:",
+            "❌ Ошибка Kufar:",
             e
         )
 
 
     # ========================================================
-    # ОГРАНИЧЕНИЕ
+    # БУДУЩИЕ ИСТОЧНИКИ
+    # ========================================================
+    #
+    # Здесь позже подключим:
+    #
+    # Wildberries
+    # Ozon
+    # AliExpress
+    # Steam
+    # билеты
+    # услуги
+    #
+    # Каждый источник будет добавлять
+    # свои товары в products.
+    #
+    # Например:
+    #
+    # from wildberries import search_wildberries
+    #
+    # wb_products = search_wildberries(
+    #     query=query,
+    #     limit=limit
+    # )
+    #
+    # products.extend(wb_products)
+    #
+    # ========================================================
+
+
+    # ========================================================
+    # ОБЩИЙ ЛИМИТ
     # ========================================================
 
     products = products[:limit]
+
+
+    print()
+    print("=" * 60)
+    print("ВСЕ ИСТОЧНИКИ")
+    print("=" * 60)
+
+    print(
+        "Всего товаров:",
+        len(products)
+    )
 
 
     # ========================================================
@@ -128,7 +144,10 @@ def build_feed(query=None, limit=DEFAULT_LIMIT):
 
     for product in products:
 
-        if not isinstance(product, dict):
+        if not isinstance(
+            product,
+            dict
+        ):
             continue
 
 
@@ -203,6 +222,30 @@ def build_feed(query=None, limit=DEFAULT_LIMIT):
 
 
         # ----------------------------------------------------
+        # SOURCE
+        # ----------------------------------------------------
+
+        source = product.get(
+            "source",
+            ""
+        )
+
+        source = str(
+            source
+        ).lower()
+
+
+        # ----------------------------------------------------
+        # EXTERNAL ID
+        # ----------------------------------------------------
+
+        external_id = product.get(
+            "external_id",
+            ""
+        )
+
+
+        # ----------------------------------------------------
         # PRODUCT
         # ----------------------------------------------------
 
@@ -213,15 +256,9 @@ def build_feed(query=None, limit=DEFAULT_LIMIT):
                 ""
             ),
 
-            "source": product.get(
-                "source",
-                ""
-            ),
+            "source": source,
 
-            "external_id": product.get(
-                "external_id",
-                ""
-            ),
+            "external_id": external_id,
 
             "title": str(
                 title
@@ -314,6 +351,11 @@ def build_feed(query=None, limit=DEFAULT_LIMIT):
             item.get("currency")
         )
 
+        print(
+            "SOURCE:",
+            item.get("source")
+        )
+
         print("-" * 40)
 
 
@@ -322,6 +364,7 @@ def build_feed(query=None, limit=DEFAULT_LIMIT):
     # ========================================================
 
     feed = {
+
         "count": len(
             normalized_products
         ),
@@ -512,7 +555,7 @@ def send_feed_to_miniapp(feed):
 
 
         # ====================================================
-        # ПРОВЕРКА ПРЯМО ПЕРЕД ОТПРАВКОЙ
+        # ПРОВЕРКА ПЕРЕД ОТПРАВКОЙ
         # ====================================================
 
         print()
@@ -593,7 +636,7 @@ def send_feed_to_miniapp(feed):
         if response.status_code != 200:
 
             print(
-                "ОШИБКА MINI APP"
+                "❌ ОШИБКА MINI APP"
             )
 
             return False
@@ -608,17 +651,21 @@ def send_feed_to_miniapp(feed):
             result = {}
 
 
-        if result.get("status") == "ok":
+        if result.get(
+            "status"
+        ) == "ok":
 
             print(
-                "Feed успешно отправлен в Mini App."
+                "Feed успешно отправлен "
+                "в Mini App."
             )
 
             return True
 
 
         print(
-            "Mini App вернул неожиданный ответ."
+            "Mini App вернул "
+            "неожиданный ответ."
         )
 
         return False
@@ -627,7 +674,8 @@ def send_feed_to_miniapp(feed):
     except requests.RequestException as e:
 
         print(
-            "Ошибка подключения к Mini App:",
+            "Ошибка подключения "
+            "к Mini App:",
             e
         )
 
