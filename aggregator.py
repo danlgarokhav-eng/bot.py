@@ -1,8 +1,11 @@
 import json
 import os
+import random
+
 import requests
 
 from kufar import search_kufar
+from wildberries import search_wildberries
 
 
 # ============================================================
@@ -16,442 +19,513 @@ MINIAPP_URL = os.getenv(
     "https://miniapp-server-production.up.railway.app"
 ).strip()
 
-DEFAULT_LIMIT = 50
-
 DEFAULT_QUERY = os.getenv(
     "DEFAULT_QUERY",
-    "кроссовки"
+    "товары"
 ).strip()
 
+DEFAULT_LIMIT = int(
+    os.getenv("DEFAULT_LIMIT", "100")
+)
+
 
 # ============================================================
-# BUILD FEED
+# НОРМАЛИЗАЦИЯ ТОВАРА
 # ============================================================
 
-def build_feed(query=None, limit=DEFAULT_LIMIT):
+def normalize_product(product, source):
+    """
+    Приводит товар к единому формату StyleFlow.
+    """
 
-    if query is None:
-        query = DEFAULT_QUERY
+    if not isinstance(product, dict):
+        return None
 
-    query = str(query).strip()
-
-    if not query:
-        query = DEFAULT_QUERY
-
-    print()
-    print("=" * 60)
-    print("STYLEFLOW — BUILD FEED")
-    print("=" * 60)
-
-    print("Запрос:", query)
-    print("Лимит:", limit)
-
-    products = []
-
-
-    # ========================================================
-    # KUFAR
-    # ========================================================
-
-    try:
-
-        print()
-        print("=" * 60)
-        print("ИСТОЧНИК: KUFAR")
-        print("=" * 60)
-
-        kufar_products = search_kufar(
-            query=query,
-            limit=limit
-        )
-
-        if not isinstance(
-            kufar_products,
-            list
-        ):
-            kufar_products = []
-
-        print(
-            "Kufar получено:",
-            len(kufar_products)
-        )
-
-        products.extend(
-            kufar_products
-        )
-
-    except Exception as e:
-
-        print(
-            "❌ Ошибка Kufar:",
-            e
-        )
-
-
-    # ========================================================
-    # БУДУЩИЕ ИСТОЧНИКИ
-    # ========================================================
-    #
-    # Здесь позже подключим:
-    #
-    # Wildberries
-    # Ozon
-    # AliExpress
-    # Steam
-    # билеты
-    # услуги
-    #
-    # Каждый источник будет добавлять
-    # свои товары в products.
-    #
-    # Например:
-    #
-    # from wildberries import search_wildberries
-    #
-    # wb_products = search_wildberries(
-    #     query=query,
-    #     limit=limit
-    # )
-    #
-    # products.extend(wb_products)
-    #
-    # ========================================================
-
-
-    # ========================================================
-    # ОБЩИЙ ЛИМИТ
-    # ========================================================
-
-    products = products[:limit]
-
-
-    print()
-    print("=" * 60)
-    print("ВСЕ ИСТОЧНИКИ")
-    print("=" * 60)
-
-    print(
-        "Всего товаров:",
-        len(products)
+    external_id = (
+        product.get("external_id")
+        or product.get("id")
+        or ""
     )
 
+    title = (
+        product.get("title")
+        or product.get("name")
+        or "Товар"
+    )
 
-    # ========================================================
-    # НОРМАЛИЗАЦИЯ
-    # ========================================================
+    price = product.get("price")
 
-    normalized_products = []
+    old_price = (
+        product.get("oldPrice")
+        if product.get("oldPrice") is not None
+        else product.get("old_price")
+    )
+
+    image = (
+        product.get("image")
+        or ""
+    )
+
+    images = product.get("images")
+
+    if not isinstance(images, list):
+        images = []
+
+    if not images and image:
+        images = [image]
+
+    url = (
+        product.get("url")
+        or product.get("link")
+        or ""
+    )
+
+    normalized = {
+        # ====================================================
+        # ОСНОВНЫЕ
+        # ====================================================
+
+        "id": f"{source}_{external_id}",
+
+        "source": source,
+
+        "external_id": str(external_id),
+
+        # ====================================================
+        # НАЗВАНИЕ
+        # ====================================================
+
+        "title": title,
+
+        "name": title,
+
+        # ====================================================
+        # ТОВАР
+        # ====================================================
+
+        "brand": product.get("brand") or "",
+
+        "category": product.get("category") or "",
+
+        # ====================================================
+        # ЦЕНА
+        # ====================================================
+
+        "price": price,
+
+        "oldPrice": old_price,
+
+        "currency": (
+            product.get("currency")
+            or "BYN"
+        ),
+
+        # ====================================================
+        # РЕЙТИНГ
+        # ====================================================
+
+        "rating": product.get("rating"),
+
+        "reviews": (
+            product.get("reviews")
+            if product.get("reviews") is not None
+            else product.get("review_count", 0)
+        ),
+
+        # ====================================================
+        # НАЛИЧИЕ
+        # ====================================================
+
+        "stock": (
+            product.get("stock")
+            if product.get("stock") is not None
+            else product.get("stock_quantity", 0)
+        ),
+
+        "available": product.get(
+            "available",
+            True
+        ),
+
+        # ====================================================
+        # ФОТО
+        # ====================================================
+
+        "image": image,
+
+        "images": images,
+
+        # ====================================================
+        # ССЫЛКА
+        # ====================================================
+
+        "url": url,
+
+        "link": url,
+
+        # ====================================================
+        # ОПИСАНИЕ
+        # ====================================================
+
+        "description": (
+            product.get("description")
+            or ""
+        ),
+
+        # ====================================================
+        # ДОПОЛНИТЕЛЬНЫЕ ПОЛЯ
+        # ====================================================
+
+        "seller": product.get(
+            "seller",
+            ""
+        ),
+
+        "seller_rating": product.get(
+            "seller_rating"
+        ),
+
+        "discount_percent": product.get(
+            "discount_percent"
+        ),
+
+        "delivery_hours": product.get(
+            "delivery_hours"
+        ),
+
+        "colours": product.get(
+            "colours",
+            []
+        ),
+
+        "size_count": product.get(
+            "size_count",
+            0
+        ),
+
+        # ====================================================
+        # ОРИГИНАЛ
+        # ====================================================
+
+        "raw": product,
+    }
+
+    return normalized
+
+
+# ============================================================
+# УДАЛЕНИЕ ДУБЛЕЙ
+# ============================================================
+
+def remove_duplicates(products):
+    """
+    Удаляет дубли товаров.
+
+    Главный ключ:
+        source + external_id
+
+    Если такого ключа нет, используется id.
+    """
+
+    unique = []
+
+    seen = set()
 
     for product in products:
 
-        if not isinstance(
-            product,
-            dict
-        ):
+        if not isinstance(product, dict):
             continue
-
-
-        # ----------------------------------------------------
-        # TITLE
-        # ----------------------------------------------------
-
-        title = (
-            product.get("title")
-            or product.get("name")
-            or "Без названия"
-        )
-
-
-        # ----------------------------------------------------
-        # PRICE
-        # ----------------------------------------------------
-
-        price = product.get(
-            "price",
-            0
-        )
-
-        try:
-
-            price = float(price)
-
-            if price.is_integer():
-                price = int(price)
-
-        except (
-            ValueError,
-            TypeError
-        ):
-
-            price = 0
-
-
-        # ----------------------------------------------------
-        # CURRENCY
-        # ----------------------------------------------------
-
-        currency = product.get(
-            "currency",
-            "BYN"
-        )
-
-        currency = str(
-            currency
-        ).upper()
-
-
-        # ----------------------------------------------------
-        # URL
-        # ----------------------------------------------------
-
-        url = (
-            product.get("url")
-            or product.get("link")
-            or ""
-        )
-
-
-        # ----------------------------------------------------
-        # IMAGE
-        # ----------------------------------------------------
-
-        image = product.get(
-            "image",
-            ""
-        )
-
-
-        # ----------------------------------------------------
-        # SOURCE
-        # ----------------------------------------------------
 
         source = product.get(
             "source",
             ""
         )
 
-        source = str(
-            source
-        ).lower()
-
-
-        # ----------------------------------------------------
-        # EXTERNAL ID
-        # ----------------------------------------------------
-
         external_id = product.get(
-            "external_id",
-            ""
+            "external_id"
         )
 
-
-        # ----------------------------------------------------
-        # PRODUCT
-        # ----------------------------------------------------
-
-        normalized_product = {
-
-            "id": product.get(
-                "id",
-                ""
-            ),
-
-            "source": source,
-
-            "external_id": external_id,
-
-            "title": str(
-                title
-            ).strip(),
-
-            "name": str(
-                title
-            ).strip(),
-
-            "brand": product.get(
-                "brand",
-                ""
-            ),
-
-            "category": product.get(
-                "category",
-                ""
-            ),
-
-            "price": price,
-
-            "oldPrice": product.get(
-                "oldPrice",
-                0
-            ),
-
-            "currency": currency,
-
-            "rating": product.get(
-                "rating",
-                0
-            ),
-
-            "stock": product.get(
-                "stock",
-                0
-            ),
-
-            "image": image,
-
-            "images": product.get(
-                "images",
-                []
-            ),
-
-            "url": url,
-
-            "link": url,
-
-            "description": product.get(
-                "description",
-                ""
-            ),
-
-            "raw": product.get(
-                "raw",
-                {}
+        if external_id:
+            key = (
+                str(source),
+                str(external_id)
             )
-        }
+        else:
+            key = (
+                str(source),
+                str(product.get("id", ""))
+            )
+
+        if key in seen:
+            continue
+
+        seen.add(key)
+        unique.append(product)
+
+    return unique
 
 
-        normalized_products.append(
-            normalized_product
-        )
+# ============================================================
+# СОЗДАНИЕ ЛЕНТЫ
+# ============================================================
 
+def build_feed(
+    query=None,
+    limit=DEFAULT_LIMIT
+):
+    """
+    Собирает общую ленту:
+
+        Kufar
+        +
+        Wildberries
+
+    и возвращает единый feed.
+    """
+
+    if not query:
+        query = DEFAULT_QUERY
+
+    print()
+    print("=" * 70)
+    print("STYLEFLOW — СОЗДАНИЕ ОБЩЕЙ ЛЕНТЫ")
+    print("=" * 70)
+
+    print(f"🔎 Запрос: {query}")
+    print(f"📦 Максимум товаров: {limit}")
+
+    all_products = []
 
     # ========================================================
-    # ПРОВЕРКА ПОСЛЕ НОРМАЛИЗАЦИИ
+    # KUFAR
     # ========================================================
 
     print()
-    print("=" * 60)
-    print("ПРОВЕРКА ПОСЛЕ НОРМАЛИЗАЦИИ")
-    print("=" * 60)
+    print("🟢 KUFAR")
+    print("-" * 70)
 
-    for item in normalized_products[:10]:
-
-        print(
-            "TITLE:",
-            item.get("title")
+    try:
+        kufar_products = search_kufar(
+            query=query,
+            limit=limit
         )
 
-        print(
-            "PRICE:",
-            item.get("price")
-        )
+        if not isinstance(kufar_products, list):
+            kufar_products = []
 
         print(
-            "CURRENCY:",
-            item.get("currency")
+            f"Получено Kufar: "
+            f"{len(kufar_products)}"
         )
+
+        for product in kufar_products:
+
+            normalized = normalize_product(
+                product,
+                "kufar"
+            )
+
+            if normalized:
+                all_products.append(
+                    normalized
+                )
+
+    except Exception as e:
 
         print(
-            "SOURCE:",
-            item.get("source")
+            f"❌ Ошибка Kufar: {e}"
         )
 
-        print("-" * 40)
+    # ========================================================
+    # WILDBERRIES
+    # ========================================================
 
+    print()
+    print("🟣 WILDBERRIES")
+    print("-" * 70)
+
+    try:
+        wb_products = search_wildberries(
+            query=query,
+            country="by",
+            page=1,
+            limit=limit
+        )
+
+        if not isinstance(wb_products, list):
+            wb_products = []
+
+        print(
+            f"Получено Wildberries: "
+            f"{len(wb_products)}"
+        )
+
+        for product in wb_products:
+
+            normalized = normalize_product(
+                product,
+                "wildberries"
+            )
+
+            if normalized:
+                all_products.append(
+                    normalized
+                )
+
+    except Exception as e:
+
+        print(
+            f"❌ Ошибка Wildberries: {e}"
+        )
+
+    # ========================================================
+    # ДУБЛИ
+    # ========================================================
+
+    before_duplicates = len(
+        all_products
+    )
+
+    all_products = remove_duplicates(
+        all_products
+    )
+
+    after_duplicates = len(
+        all_products
+    )
+
+    removed = (
+        before_duplicates
+        - after_duplicates
+    )
+
+    print()
+    print(
+        f"🧹 Удалено дублей: {removed}"
+    )
+
+    # ========================================================
+    # ПЕРЕМЕШИВАНИЕ
+    # ========================================================
+
+    random.shuffle(
+        all_products
+    )
+
+    # ========================================================
+    # ОГРАНИЧЕНИЕ
+    # ========================================================
+
+    if limit and limit > 0:
+
+        all_products = all_products[
+            :limit
+        ]
 
     # ========================================================
     # FEED
     # ========================================================
 
     feed = {
-
-        "count": len(
-            normalized_products
-        ),
+        "count": len(all_products),
 
         "query": query,
 
-        "items": normalized_products
+        "items": all_products
     }
 
-
     print()
-    print("=" * 60)
-    print("FEED СОЗДАН")
-    print("=" * 60)
+    print("=" * 70)
+    print("ИТОГ")
+    print("=" * 70)
 
     print(
-        "Количество:",
-        feed["count"]
+        f"🛍 Всего товаров: "
+        f"{len(all_products)}"
     )
+
+    kufar_count = sum(
+        1
+        for item in all_products
+        if item.get("source") == "kufar"
+    )
+
+    wb_count = sum(
+        1
+        for item in all_products
+        if item.get("source") == "wildberries"
+    )
+
+    print(
+        f"🟢 Kufar: "
+        f"{kufar_count}"
+    )
+
+    print(
+        f"🟣 Wildberries: "
+        f"{wb_count}"
+    )
+
+    print("=" * 70)
 
     return feed
 
 
 # ============================================================
-# SAVE FEED
+# СОХРАНЕНИЕ FEED.JSON
 # ============================================================
 
 def save_feed(feed):
+    """
+    Сохраняет feed.json.
+    """
 
     try:
-
-        if not isinstance(
-            feed,
-            dict
-        ):
-
-            print(
-                "save_feed: неправильный формат"
-            )
-
-            return False
-
 
         with open(
             FEED_FILE,
             "w",
             encoding="utf-8"
-        ) as f:
+        ) as file:
 
             json.dump(
                 feed,
-                f,
+                file,
                 ensure_ascii=False,
                 indent=2
             )
 
-
         print(
-            "Feed сохранён:",
-            FEED_FILE
+            f"💾 Feed сохранён: "
+            f"{FEED_FILE}"
         )
 
         return True
 
-
     except Exception as e:
 
         print(
-            "Ошибка сохранения:",
-            e
+            f"❌ Ошибка сохранения feed: "
+            f"{e}"
         )
 
         return False
 
 
 # ============================================================
-# LOAD FEED
+# ЗАГРУЗКА FEED.JSON
 # ============================================================
 
 def load_feed():
+    """
+    Загружает существующий feed.json.
+    """
 
     if not os.path.exists(
         FEED_FILE
     ):
-
         print(
-            "feed.json не найден"
+            "⚠️ feed.json ещё не существует"
         )
 
         return {
@@ -459,7 +533,6 @@ def load_feed():
             "query": "",
             "items": []
         }
-
 
     try:
 
@@ -467,44 +540,44 @@ def load_feed():
             FEED_FILE,
             "r",
             encoding="utf-8"
-        ) as f:
+        ) as file:
 
-            feed = json.load(f)
-
+            feed = json.load(file)
 
         if not isinstance(
             feed,
             dict
         ):
-
             return {
                 "count": 0,
                 "query": "",
                 "items": []
             }
 
-
-        if not isinstance(
-            feed.get("items"),
-            list
-        ):
-
-            feed["items"] = []
-
-
-        feed["count"] = len(
-            feed["items"]
+        items = feed.get(
+            "items",
+            []
         )
 
+        if not isinstance(
+            items,
+            list
+        ):
+            items = []
+
+        feed["items"] = items
+
+        feed["count"] = len(
+            items
+        )
 
         return feed
-
 
     except Exception as e:
 
         print(
-            "Ошибка загрузки feed:",
-            e
+            f"❌ Ошибка загрузки feed: "
+            f"{e}"
         )
 
         return {
@@ -515,223 +588,250 @@ def load_feed():
 
 
 # ============================================================
-# SEND TO MINI APP
+# ОТПРАВКА В MINI APP
 # ============================================================
 
 def send_feed_to_miniapp(feed):
+    """
+    Отправляет список товаров
+    на miniapp-server.
+    """
+
+    if not isinstance(
+        feed,
+        dict
+    ):
+        print(
+            "❌ Некорректный feed"
+        )
+
+        return False
+
+    items = feed.get(
+        "items",
+        []
+    )
+
+    if not isinstance(
+        items,
+        list
+    ):
+        print(
+            "❌ feed.items должен быть списком"
+        )
+
+        return False
+
+    url = (
+        MINIAPP_URL.rstrip("/")
+        + "/update_feed"
+    )
+
+    print()
+    print(
+        "📡 Отправляем ленту в Mini App..."
+    )
+
+    print(
+        f"URL: {url}"
+    )
+
+    print(
+        f"Товаров: {len(items)}"
+    )
 
     try:
-
-        if not isinstance(
-            feed,
-            dict
-        ):
-
-            print(
-                "send_feed_to_miniapp: "
-                "feed должен быть dict"
-            )
-
-            return False
-
-
-        items = feed.get(
-            "items",
-            []
-        )
-
-
-        if not isinstance(
-            items,
-            list
-        ):
-
-            print(
-                "send_feed_to_miniapp: "
-                "items должен быть list"
-            )
-
-            return False
-
-
-        # ====================================================
-        # ПРОВЕРКА ПЕРЕД ОТПРАВКОЙ
-        # ====================================================
-
-        print()
-        print("=" * 60)
-        print("ПРЯМО ПЕРЕД ОТПРАВКОЙ В MINI APP")
-        print("=" * 60)
-
-        for item in items[:10]:
-
-            print(
-                "TITLE:",
-                item.get("title")
-            )
-
-            print(
-                "PRICE:",
-                item.get("price")
-            )
-
-            print(
-                "CURRENCY:",
-                item.get("currency")
-            )
-
-            print(
-                "SOURCE:",
-                item.get("source")
-            )
-
-            print("-" * 40)
-
-
-        # ====================================================
-        # URL
-        # ====================================================
-
-        url = (
-            MINIAPP_URL.rstrip("/")
-            + "/update_feed"
-        )
-
-
-        print()
-        print(
-            "POST:",
-            url
-        )
-
-        print(
-            "Товаров:",
-            len(items)
-        )
-
-
-        # ====================================================
-        # ОТПРАВКА
-        # ====================================================
 
         response = requests.post(
             url,
             json=items,
-            timeout=30
+            timeout=60
         )
 
+    except requests.exceptions.Timeout:
 
         print(
-            "HTTP:",
-            response.status_code
-        )
-
-
-        print(
-            "Ответ сервера:",
-            response.text[:2000]
-        )
-
-
-        if response.status_code != 200:
-
-            print(
-                "❌ ОШИБКА MINI APP"
-            )
-
-            return False
-
-
-        try:
-
-            result = response.json()
-
-        except ValueError:
-
-            result = {}
-
-
-        if result.get(
-            "status"
-        ) == "ok":
-
-            print(
-                "Feed успешно отправлен "
-                "в Mini App."
-            )
-
-            return True
-
-
-        print(
-            "Mini App вернул "
-            "неожиданный ответ."
+            "❌ Mini App server "
+            "не ответил за 60 секунд"
         )
 
         return False
 
-
-    except requests.RequestException as e:
+    except requests.exceptions.RequestException as e:
 
         print(
-            "Ошибка подключения "
-            "к Mini App:",
-            e
+            f"❌ Ошибка отправки "
+            f"в Mini App: {e}"
         )
 
         return False
 
+    print(
+        f"HTTP: {response.status_code}"
+    )
 
-    except Exception as e:
+    if response.status_code != 200:
 
         print(
-            "Ошибка send_feed_to_miniapp:",
-            e
+            "❌ Mini App server "
+            "вернул ошибку:"
+        )
+
+        print(
+            response.text[:3000]
         )
 
         return False
+
+    try:
+
+        result = response.json()
+
+    except ValueError:
+
+        print(
+            "⚠️ Сервер ответил, "
+            "но вернул не JSON"
+        )
+
+        print(
+            response.text[:1000]
+        )
+
+        return True
+
+    print(
+        f"✅ Mini App получил "
+        f"{result.get('count', len(items))} товаров"
+    )
+
+    return True
 
 
 # ============================================================
-# TEST
+# ПОЛНОЕ ОБНОВЛЕНИЕ
+# ============================================================
+
+def refresh_feed(
+    query=None,
+    limit=DEFAULT_LIMIT
+):
+    """
+    Полный цикл:
+
+        источники
+        ↓
+        объединение
+        ↓
+        удаление дублей
+        ↓
+        перемешивание
+        ↓
+        feed.json
+        ↓
+        Mini App
+    """
+
+    feed = build_feed(
+        query=query,
+        limit=limit
+    )
+
+    if not feed.get("items"):
+
+        print(
+            "❌ Лента пустая. "
+            "Сохранять и отправлять нечего."
+        )
+
+        return feed
+
+    saved = save_feed(
+        feed
+    )
+
+    if saved:
+
+        sent = send_feed_to_miniapp(
+            feed
+        )
+
+        if sent:
+            print(
+                "✅ Лента полностью "
+                "обновлена."
+            )
+        else:
+            print(
+                "⚠️ Feed сохранён локально, "
+                "но не отправлен в Mini App."
+            )
+
+    return feed
+
+
+# ============================================================
+# ТЕСТ
 # ============================================================
 
 if __name__ == "__main__":
 
     print()
-    print("=" * 60)
-    print("STYLEFLOW — ТЕСТ AGGREGATOR")
-    print("=" * 60)
+    print("=" * 70)
+    print("STYLEFLOW — ТЕСТ АГРЕГАТОРА")
+    print("=" * 70)
 
-
-    feed = build_feed(
-        query="кроссовки",
-        limit=10
+    feed = refresh_feed(
+        query="товары",
+        limit=100
     )
-
 
     print()
-    print(
-        "ИТОГО:",
-        feed["count"]
-    )
+    print("=" * 70)
+    print("ПЕРВЫЕ ТОВАРЫ")
+    print("=" * 70)
 
+    for index, item in enumerate(
+        feed.get("items", [])[:20],
+        start=1
+    ):
 
-    # --------------------------------------------------------
-    # SAVE
-    # --------------------------------------------------------
-
-    save_feed(
-        feed
-    )
-
-
-    # --------------------------------------------------------
-    # SEND
-    # --------------------------------------------------------
-
-    if feed["items"]:
-
-        send_feed_to_miniapp(
-            feed
+        print()
+        print(
+            f"#{index} "
+            f"[{item.get('source')}]"
         )
+
+        print(
+            f"Название: "
+            f"{item.get('title')}"
+        )
+
+        print(
+            f"Цена: "
+            f"{item.get('price')} "
+            f"{item.get('currency')}"
+        )
+
+        print(
+            f"Бренд: "
+            f"{item.get('brand')}"
+        )
+
+        print(
+            f"Рейтинг: "
+            f"{item.get('rating')}"
+        )
+
+        print(
+            f"Ссылка: "
+            f"{item.get('url')}"
+        )
+
+    print()
+    print("=" * 70)
+    print(
+        f"✅ Готово. "
+        f"Всего: {feed.get('count', 0)}"
+    )
+    print("=" * 70)
