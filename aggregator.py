@@ -44,6 +44,7 @@ def normalize_product(product, source):
     external_id = (
         product.get("external_id")
         or product.get("id")
+        or product.get("product_id")
         or ""
     )
 
@@ -82,7 +83,7 @@ def normalize_product(product, source):
 
     normalized = {
         # ====================================================
-        # ОСНОВНЫЕ
+        # ID
         # ====================================================
 
         "id": f"{source}_{external_id}",
@@ -219,12 +220,10 @@ def normalize_product(product, source):
 
 def remove_duplicates(products):
     """
-    Удаляет дубли товаров.
+    Удаляет дубли внутри текущей поисковой выдачи.
 
     Главный ключ:
         source + external_id
-
-    Если такого ключа нет, используется id.
     """
 
     unique = []
@@ -246,11 +245,14 @@ def remove_duplicates(products):
         )
 
         if external_id:
+
             key = (
                 str(source),
                 str(external_id)
             )
+
         else:
+
             key = (
                 str(source),
                 str(product.get("id", ""))
@@ -260,6 +262,7 @@ def remove_duplicates(products):
             continue
 
         seen.add(key)
+
         unique.append(product)
 
     return unique
@@ -274,13 +277,20 @@ def build_feed(
     limit=DEFAULT_LIMIT
 ):
     """
-    Собирает общую ленту:
+    Собирает текущую поисковую выдачу:
 
         Kufar
         +
         Wildberries
 
-    и возвращает единый feed.
+    ВАЖНО:
+
+    Эта функция НЕ отвечает за накопление.
+
+    Она только получает новую пачку товаров.
+
+    Накопление происходит на miniapp-server
+    в products.db.
     """
 
     if not query:
@@ -288,11 +298,16 @@ def build_feed(
 
     print()
     print("=" * 70)
-    print("STYLEFLOW — СОЗДАНИЕ ОБЩЕЙ ЛЕНТЫ")
+    print("STYLEFLOW — СОЗДАНИЕ НОВОЙ ПАЧКИ")
     print("=" * 70)
 
-    print(f"🔎 Запрос: {query}")
-    print(f"📦 Максимум товаров: {limit}")
+    print(
+        f"🔎 Запрос: {query}"
+    )
+
+    print(
+        f"📦 Максимум товаров: {limit}"
+    )
 
     all_products = []
 
@@ -305,12 +320,16 @@ def build_feed(
     print("-" * 70)
 
     try:
+
         kufar_products = search_kufar(
             query=query,
             limit=limit
         )
 
-        if not isinstance(kufar_products, list):
+        if not isinstance(
+            kufar_products,
+            list
+        ):
             kufar_products = []
 
         print(
@@ -326,6 +345,7 @@ def build_feed(
             )
 
             if normalized:
+
                 all_products.append(
                     normalized
                 )
@@ -345,6 +365,7 @@ def build_feed(
     print("-" * 70)
 
     try:
+
         wb_products = search_wildberries(
             query=query,
             country="by",
@@ -352,7 +373,10 @@ def build_feed(
             limit=limit
         )
 
-        if not isinstance(wb_products, list):
+        if not isinstance(
+            wb_products,
+            list
+        ):
             wb_products = []
 
         print(
@@ -368,6 +392,7 @@ def build_feed(
             )
 
             if normalized:
+
                 all_products.append(
                     normalized
                 )
@@ -436,11 +461,11 @@ def build_feed(
 
     print()
     print("=" * 70)
-    print("ИТОГ")
+    print("НОВАЯ ПАЧКА")
     print("=" * 70)
 
     print(
-        f"🛍 Всего товаров: "
+        f"🛍 Товаров в новой пачке: "
         f"{len(all_products)}"
     )
 
@@ -457,13 +482,11 @@ def build_feed(
     )
 
     print(
-        f"🟢 Kufar: "
-        f"{kufar_count}"
+        f"🟢 Kufar: {kufar_count}"
     )
 
     print(
-        f"🟣 Wildberries: "
-        f"{wb_count}"
+        f"🟣 Wildberries: {wb_count}"
     )
 
     print("=" * 70)
@@ -472,12 +495,15 @@ def build_feed(
 
 
 # ============================================================
-# СОХРАНЕНИЕ FEED.JSON
+# СОХРАНЕНИЕ ЛОКАЛЬНОГО FEED.JSON
 # ============================================================
 
 def save_feed(feed):
     """
-    Сохраняет feed.json.
+    Сохраняет последнюю поисковую выдачу локально.
+
+    ВАЖНО:
+    feed.json больше НЕ является главным хранилищем.
     """
 
     try:
@@ -496,7 +522,7 @@ def save_feed(feed):
             )
 
         print(
-            f"💾 Feed сохранён: "
+            f"💾 Последняя выдача сохранена: "
             f"{FEED_FILE}"
         )
 
@@ -513,17 +539,18 @@ def save_feed(feed):
 
 
 # ============================================================
-# ЗАГРУЗКА FEED.JSON
+# ЗАГРУЗКА ЛОКАЛЬНОГО FEED.JSON
 # ============================================================
 
 def load_feed():
     """
-    Загружает существующий feed.json.
+    Загружает последнюю поисковую выдачу.
     """
 
     if not os.path.exists(
         FEED_FILE
     ):
+
         print(
             "⚠️ feed.json ещё не существует"
         )
@@ -548,6 +575,7 @@ def load_feed():
             feed,
             dict
         ):
+
             return {
                 "count": 0,
                 "query": "",
@@ -563,6 +591,7 @@ def load_feed():
             items,
             list
         ):
+
             items = []
 
         feed["items"] = items
@@ -588,19 +617,117 @@ def load_feed():
 
 
 # ============================================================
-# ОТПРАВКА В MINI APP
+# ПРОВЕРКА НАКОПЛЕННОГО КАТАЛОГА
+# ============================================================
+
+def get_miniapp_catalog():
+    """
+    Получает ВЕСЬ накопленный каталог
+    с miniapp-server.
+
+    Источник:
+        products.db
+    """
+
+    url = (
+        MINIAPP_URL.rstrip("/")
+        + "/api/feed"
+    )
+
+    print()
+    print(
+        "📚 Запрашиваю накопленный каталог..."
+    )
+
+    print(
+        f"URL: {url}"
+    )
+
+    try:
+
+        response = requests.get(
+            url,
+            timeout=30
+        )
+
+        response.raise_for_status()
+
+        data = response.json()
+
+        if not isinstance(
+            data,
+            list
+        ):
+
+            print(
+                "❌ Mini App вернул "
+                "не список товаров"
+            )
+
+            return []
+
+        print(
+            f"📚 В базе Mini App сейчас: "
+            f"{len(data)} товаров"
+        )
+
+        return data
+
+    except requests.exceptions.Timeout:
+
+        print(
+            "❌ Таймаут при получении "
+            "накопленного каталога"
+        )
+
+        return []
+
+    except requests.exceptions.RequestException as e:
+
+        print(
+            f"❌ Ошибка получения каталога: "
+            f"{e}"
+        )
+
+        return []
+
+    except ValueError:
+
+        print(
+            "❌ Mini App вернул "
+            "некорректный JSON"
+        )
+
+        return []
+
+
+# ============================================================
+# ОТПРАВКА НОВОЙ ПАЧКИ В MINI APP
 # ============================================================
 
 def send_feed_to_miniapp(feed):
     """
-    Отправляет список товаров
+    Отправляет НОВУЮ пачку товаров
     на miniapp-server.
+
+    miniapp-server сам:
+
+        получает пачку
+              ↓
+        сохраняет в products.db
+              ↓
+        обновляет существующие товары
+              ↓
+        добавляет новые
+              ↓
+        НЕ удаляет старые
     """
 
     if not isinstance(
         feed,
         dict
     ):
+
         print(
             "❌ Некорректный feed"
         )
@@ -616,8 +743,17 @@ def send_feed_to_miniapp(feed):
         items,
         list
     ):
+
         print(
             "❌ feed.items должен быть списком"
+        )
+
+        return False
+
+    if not items:
+
+        print(
+            "⚠️ Новая пачка пустая"
         )
 
         return False
@@ -628,16 +764,16 @@ def send_feed_to_miniapp(feed):
     )
 
     print()
-    print(
-        "📡 Отправляем ленту в Mini App..."
-    )
+    print("=" * 70)
+    print("📡 ОТПРАВКА НОВОЙ ПАЧКИ В MINI APP")
+    print("=" * 70)
 
     print(
         f"URL: {url}"
     )
 
     print(
-        f"Товаров: {len(items)}"
+        f"Новых товаров: {len(items)}"
     )
 
     try:
@@ -698,12 +834,47 @@ def send_feed_to_miniapp(feed):
             response.text[:1000]
         )
 
-        return True
+        return False
+
+    print()
+    print(
+        "✅ MINI APP ПРИНЯЛ ПАЧКУ"
+    )
 
     print(
-        f"✅ Mini App получил "
-        f"{result.get('count', len(items))} товаров"
+        f"Получено: "
+        f"{result.get('received', len(items))}"
     )
+
+    print(
+        f"Сохранено/обновлено: "
+        f"{result.get('saved', '?')}"
+    )
+
+    print(
+        f"Всего в БД: "
+        f"{result.get('total', '?')}"
+    )
+
+    # ========================================================
+    # ДОПОЛНИТЕЛЬНАЯ ПРОВЕРКА
+    # ========================================================
+
+    catalog = get_miniapp_catalog()
+
+    if catalog:
+
+        print()
+        print(
+            "🎯 ПРОВЕРКА НАКОПЛЕНИЯ:"
+        )
+
+        print(
+            f"Весь каталог сейчас: "
+            f"{len(catalog)} товаров"
+        )
+
+    print("=" * 70)
 
     return True
 
@@ -717,19 +888,9 @@ def refresh_feed(
     limit=DEFAULT_LIMIT
 ):
     """
-    Полный цикл:
-
-        источники
-        ↓
-        объединение
-        ↓
-        удаление дублей
-        ↓
-        перемешивание
-        ↓
-        feed.json
-        ↓
-        Mini App
+    Получает новую пачку,
+    сохраняет её в БД Mini App
+    и проверяет накопленный каталог.
     """
 
     feed = build_feed(
@@ -740,32 +901,20 @@ def refresh_feed(
     if not feed.get("items"):
 
         print(
-            "❌ Лента пустая. "
-            "Сохранять и отправлять нечего."
+            "❌ Новая выдача пустая."
         )
 
         return feed
 
-    saved = save_feed(
+    # Локальная копия последней выдачи
+    save_feed(
         feed
     )
 
-    if saved:
-
-        sent = send_feed_to_miniapp(
-            feed
-        )
-
-        if sent:
-            print(
-                "✅ Лента полностью "
-                "обновлена."
-            )
-        else:
-            print(
-                "⚠️ Feed сохранён локально, "
-                "но не отправлен в Mini App."
-            )
+    # Отправляем именно НОВУЮ пачку.
+    send_feed_to_miniapp(
+        feed
+    )
 
     return feed
 
@@ -803,6 +952,11 @@ if __name__ == "__main__":
         )
 
         print(
+            f"ID: "
+            f"{item.get('external_id')}"
+        )
+
+        print(
             f"Название: "
             f"{item.get('title')}"
         )
@@ -830,8 +984,10 @@ if __name__ == "__main__":
 
     print()
     print("=" * 70)
+
     print(
-        f"✅ Готово. "
-        f"Всего: {feed.get('count', 0)}"
+        f"✅ Новая пачка: "
+        f"{feed.get('count', 0)}"
     )
+
     print("=" * 70)
